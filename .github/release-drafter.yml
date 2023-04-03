@@ -1,0 +1,40 @@
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
+categories:
+  - title: Breaking Changes 💥
+    labels:
+      - breaking-change
+  - title: New Features 🎉
+    labels:
+      - feature
+  - title: Bug Fixes 🐛
+    labels:
+      - bug-fix
+  - title: Dependencies 📌
+    labels:
+      - dependencies
+  - title: Other Changes 🛠
+    labels:
+      - "*"
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+version-resolver:
+  major:
+    labels:
+      - "major"
+      - "breaking-change"
+  minor:
+    labels:
+      - "minor"
+      - "feature"
+  patch:
+    labels:
+      - "patch"
+      - "bug-fix"
+  default: patch
+template: |
+  ## Changes
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
