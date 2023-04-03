@@ -6,10 +6,10 @@ categories:
       - breaking-change
   - title: New Features 🎉
     labels:
-      - feature
+      - new-feature
   - title: Bug Fixes 🐛
     labels:
-      - bug-fix
+      - patch
   - title: Dependencies 📌
     labels:
       - dependencies
@@ -26,11 +26,10 @@ version-resolver:
   minor:
     labels:
       - "minor"
-      - "feature"
+      - "new-feature"
   patch:
     labels:
       - "patch"
-      - "bug-fix"
   default: patch
 template: |
   ## Changes
