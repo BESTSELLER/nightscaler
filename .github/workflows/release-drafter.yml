@@ -14,8 +14,7 @@ on:
   #   types: [opened, reopened, synchronize]
 
 permissions:
-  contents: 'read'
-  id-token: 'write'
+  contents: 'write'
   pull-requests: 'read'
 
 jobs:
