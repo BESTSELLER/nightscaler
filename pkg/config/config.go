@@ -1,17 +1,15 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/kelseyhightower/envconfig"
 )
 
 type config struct {
-	ProjectID      string `envconfig:"PROJECT_ID"`
-	Zone           string `envconfig:"ZONE"`
-	ClusterName    string `envconfig:"CLUSTERNAME"`
-	SubscriptionID string `envconfig:"SUBSCRIPTION_ID"`
+	ProjectID   string `envconfig:"PROJECT_ID"`
+	ClusterName string `envconfig:"CLUSTERNAME"`
+	Topic       string `envconfig:"TOPIC"`
 }
 
 var Config config
@@ -22,9 +20,15 @@ func Init() {
 		log.Fatal(err.Error())
 	}
 
-	format := "PROJECT_ID: %s\nZONE: %s\nCLUSTERNAME: %s\nSUBSCRIPTION_ID: %s\n"
-	_, err = fmt.Printf(format, Config.ProjectID, Config.Zone, Config.ClusterName, Config.SubscriptionID)
-	if err != nil {
-		log.Fatal(err.Error())
+	if Config.ProjectID == "" {
+		log.Fatal("PROJECT_ID is not set")
+	}
+
+	if Config.ClusterName == "" {
+		log.Fatal("CLUSTERNAME is not set")
+	}
+
+	if Config.Topic == "" {
+		log.Fatal("TOPIC is not set")
 	}
 }
