@@ -13,4 +13,4 @@ WORKDIR /app
 
 COPY --from=builder /app/kscale .
 
-ENTRYPOINT /app
+ENTRYPOINT ["/app/kscale"]
