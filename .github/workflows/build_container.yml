@@ -3,9 +3,6 @@ name: Build image and push to GHCR
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - fix-acitons
 
 jobs:
   build-and-push-image:
