@@ -4,13 +4,14 @@ WORKDIR /app
 
 COPY . .
 
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+
 RUN go mod download
 RUN go build -o ./kscale .
 
-FROM alpine:3.14
+FROM scratch
 
-WORKDIR /app
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /app/kscale /go/bin/kscale
 
-COPY --from=builder /app/kscale .
-
-ENTRYPOINT ["/app/kscale"]
+ENTRYPOINT ["/go/bin/kscale"]
