@@ -1,5 +1,7 @@
-name-template: "chart-$RESOLVED_VERSION"
-tag-template: "chart-$RESOLVED_VERSION"
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
+exclude-labels:
+  - helm-chart
 categories:
   - title: Breaking Changes 💥
     labels:
