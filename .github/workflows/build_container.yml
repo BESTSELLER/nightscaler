@@ -10,9 +10,9 @@ on:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    # permissions:
+    permissions:
     #   contents: read
-    #   packages: write
+      packages: write
     defaults:
       run:
         working-directory: '.'
