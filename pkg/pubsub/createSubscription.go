@@ -22,5 +22,7 @@ func createSubscription(ctx context.Context, client *pubsub.Client) (pubsub.Subs
 		return pubsub.Subscription{}, fmt.Errorf("pubsub.CreateSubscription error: %v", err)
 	}
 
+	fmt.Printf("Subscription %s created to topic %s with attribute filter \"attributes.cluster = %s\"\n", subName, config.Config.Topic, config.Config.ClusterName)
+
 	return *subscription, nil
 }
