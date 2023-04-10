@@ -4,17 +4,29 @@
 
 replicaCount: 1
 
+pubsub:
+  # Project ID where the Pub/Sub topic is located
+  # REQUIRED
+  projectId: ""
+  # Pub/Sub topic to subscribe to
+  # REQUIRED
+  topic: ""
+  # Name of the cluster it is running in. Used to identify the cluster in the Pub/Sub message.
+  # REQUIRED
+  clustername: ""
+
 image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  # tag: ""
+  tag: "sha-85d7e3c"
 
 
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  #annotations: {}
+  annotations:
+    iam.gke.io/gcp-service-account: kscale@ok2-pub-dev-f3ae.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   #name: ""

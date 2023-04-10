@@ -29,5 +29,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "ghcr.io/orkarstoft/kscale:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: KSCALE_PROJECT_ID
+            value: {{ .Values.pubsub.projectId }}
+          - name: KSCALE_TOPIC
+            value: {{ .Values.pubsub.topic }}
+          - name: KSCALE_CLUSTERNAME
+            value: {{ .Values.pubsub.clustername }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
