@@ -7,9 +7,10 @@ import (
 )
 
 type config struct {
-	ProjectID   string `envconfig:"PROJECT_ID"`
-	ClusterName string `envconfig:"CLUSTERNAME"`
-	Topic       string `envconfig:"TOPIC"`
+	ProjectID   string `envconfig:"PROJECT_ID" required:"true"`
+	ClusterName string `envconfig:"CLUSTERNAME" required:"true"`
+	Topic       string `envconfig:"TOPIC" required:"true"`
+	Debug       bool   `envconfig:"DEBUG" default:"false"`
 }
 
 var Config config
@@ -18,17 +19,5 @@ func Init() {
 	err := envconfig.Process("KSCALE", &Config)
 	if err != nil {
 		log.Fatal(err.Error())
-	}
-
-	if Config.ProjectID == "" {
-		log.Fatal("PROJECT_ID is not set")
-	}
-
-	if Config.ClusterName == "" {
-		log.Fatal("CLUSTERNAME is not set")
-	}
-
-	if Config.Topic == "" {
-		log.Fatal("TOPIC is not set")
 	}
 }

@@ -28,13 +28,17 @@ func Listen() error {
 
 	// Receive messages
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
+		if config.Config.Debug {
+			fmt.Printf("Received message: %s", string(msg.Data))
+		}
+
 		// Unmarshal message
 		var m PubSubMsg
 		if err := json.Unmarshal(msg.Data, &m); err != nil {
 			panic(err)
 		}
 
-		if m.Action == "scale-namespace-up" {
+		if m.Action == "kscale_scale_namespace_up" {
 			fmt.Printf("Scaling %s namespace %s up\n", m.Cluster, m.Namespace)
 			convertIntToTimeDuration, err := time.ParseDuration(fmt.Sprintf("%dh", m.Duration))
 			if err != nil {
