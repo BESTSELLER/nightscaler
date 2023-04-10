@@ -1,8 +1,9 @@
 name: Build image and push to GHCR
 
 on:
-  release:
-    types: [published]
+  push:
+    tags-ignore:
+      - 'chart-*'
 
 jobs:
   build-and-push-image:
