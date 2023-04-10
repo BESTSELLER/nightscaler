@@ -29,7 +29,7 @@ func Listen() error {
 	// Receive messages
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
 		if config.Config.Debug {
-			fmt.Printf("[DEBUG]: Received message: %s", string(msg.Data))
+			fmt.Printf("[DEBUG]: Received message: %s\n", string(msg.Data))
 		}
 
 		// Unmarshal message
