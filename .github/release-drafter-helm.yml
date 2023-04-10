@@ -1,7 +1,7 @@
 name-template: "chart-$RESOLVED_VERSION"
 tag-template: "chart-$RESOLVED_VERSION"
 include-labels:
-  - "helm-chart"
+  - helm-chart
 tag-prefix: "chart-"
 categories:
   - title: Breaking Changes 💥
