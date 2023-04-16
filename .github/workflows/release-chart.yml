@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'chart-*'
-    branches:
-      - chart-action
 
 jobs:
   release:
