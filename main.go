@@ -4,16 +4,16 @@ import (
 	"fmt"
 
 	"github.com/orkarstoft/kscale/pkg/config"
-	"github.com/orkarstoft/kscale/pkg/pubsublite"
+	"github.com/orkarstoft/kscale/pkg/pubsub"
 )
-
-var ClusterName string
 
 func main() {
 	config.Init()
-	fmt.Printf("projectID: %s, zone: %s, subscriptionID: %s\n", config.Config.ProjectID, config.Config.Zone, config.Config.SubscriptionID)
-	subscriptionPath := fmt.Sprintf("projects/%s/locations/%s/subscriptions/%s", config.Config.ProjectID, config.Config.Zone, config.Config.SubscriptionID)
 
-	// Listen to pub sub lite messages
-	pubsublite.Listen(subscriptionPath)
+	fmt.Println("[INFO]: Starting KScale")
+	fmt.Printf("[INFO]: Creating subscriber for topic %s in project %s\n", config.Config.Topic, config.Config.ProjectID)
+	err := pubsub.Listen()
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+	}
 }
