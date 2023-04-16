@@ -30,11 +30,11 @@ jobs:
 
       - name: Install Chart Releaser
         run: |
-          // Get the tar file         
+          # Get the tar file         
           curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.5.0/chart-releaser_1.5.0_linux_amd64.tar.gz
-          // Untar the file
+          # Untar the file
           tar -zxvf chart-releaser.tar.gz
-          // Make executable
+          # Make executable
           chmod +x cr
       - name: Package Chart
         run: |
