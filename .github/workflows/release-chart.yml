@@ -24,12 +24,31 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # - name: Run chart-releaser
-      #   uses: helm/chart-releaser-action@v1.5.0
-      #   env:
-      #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      #   with:
-      #     charts_dir: chart
+      - uses: cardinalby/git-get-release-action@v1
+        name: Get Latest Chart Release
+        id: get_chart_release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+          draft: false
+          releaseNameRegEx: '^chart-[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - uses: cardinalby/git-get-release-action@v1
+        name: Get Latest App Release
+        id: get_app_release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+          draft: false
+          releaseNameRegEx: '^[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - name: Replace Strings In Chart
+        run: |
+          # Replace strings in chart/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag }}/" chart/Chart.yaml
+          sed -i "s/version: .*/version: ${{ steps.get_chart_release.outputs.tag }}/" chart/Chart.yaml
 
       - name: Install Chart Releaser
         run: |
