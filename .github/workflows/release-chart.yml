@@ -16,14 +16,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name "$GITHUB_ACTOR"
+      #     git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          charts_dir: chart
+      # - name: Run chart-releaser
+      #   uses: helm/chart-releaser-action@v1.5.0
+      #   env:
+      #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      #   with:
+      #     charts_dir: chart
+
+      - name: Install Chart Releaser
+        run: |
+          // Get the tar file         
+          curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.5.0/chart-releaser_1.5.0_linux_amd64.tar.gz
+          // Untar the file
+          tar -zxvf chart-releaser.tar.gz
+          // Make executable
+          chmod +x cr
+      - name: Package Chart
+        run: |
+          ./cr package chart
+      - name: Upload Chart
+        run: |
+          ./cr upload -o orkarstoft -r kscale -p chart
