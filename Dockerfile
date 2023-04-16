@@ -1,17 +1,18 @@
 FROM golang:1.20-alpine AS builder
 
-WORKDIR /app
-
-COPY . .
-
 RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
+WORKDIR /app
+
+COPY go.mod go.sum /app/
 RUN go mod download
-RUN go build -o ./kscale .
+
+COPY . .
+RUN go build -buildvcs=false -tags netgo -trimpath -tags netgo -ldflags="-w -s" -o ./kscale .
 
 FROM scratch
 
+COPY --from=builder --chown=nonroot:nonroot /app/kscale /app/kscale
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /app/kscale /go/bin/kscale
 
-ENTRYPOINT ["/go/bin/kscale"]
+ENTRYPOINT ["/app/kscale"]
