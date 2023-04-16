@@ -48,7 +48,9 @@ jobs:
         run: |
           # Replace strings in chart/Chart.yaml
           sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag }}/" chart/Chart.yaml
+          cat chart/Chart.yaml
           sed -i "s/version: .*/version: ${{ steps.get_chart_release.outputs.tag }}/" chart/Chart.yaml
+          cat chart/Chart.yaml
 
       - name: Install Chart Releaser
         run: |
