@@ -8,6 +8,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,9 +22,52 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+      - uses: cardinalby/git-get-release-action@v1
+        name: Get Latest Chart Release
+        id: get_chart_release
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          charts_dir: chart
+          latest: true
+          draft: false
+          releaseNameRegEx: '^chart-[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - uses: cardinalby/git-get-release-action@v1
+        name: Get Latest App Release
+        id: get_app_release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+          draft: false
+          releaseNameRegEx: '^[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - name: Replace Strings In Chart
+        run: |
+          # Remove prefix '-chart' from tag name
+          CHART_TAG_NAME=${{ steps.get_chart_release.outputs.tag_name }}
+          CHART_TAG_NAME=${CHART_TAG_NAME#chart-}
+
+          # Replace strings in chart/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag_name }}/" chart/Chart.yaml
+          sed -i "s/version: .*/version: $CHART_TAG_NAME/" chart/Chart.yaml
+          cat chart/Chart.yaml
+
+      - name: Install Chart Releaser
+        run: |
+          # Get the tar file         
+          curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.5.0/chart-releaser_1.5.0_linux_amd64.tar.gz
+          # Untar the file
+          tar -zxvf chart-releaser.tar.gz
+          # Make executable
+          chmod +x cr
+      - name: Package Chart
+        run: |
+          ./cr package chart
+      - name: Upload Chart
+        run: |
+          ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template "chart-{{ .Version }}" --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
+      - name: Update Chart index
+        run: |
+          mkdir -p .cr-index
+          ./cr index -o orkarstoft -r kscale --push --release-name-template "chart-{{ .Version }}" --token ${{ secrets.GITHUB_TOKEN }}
