@@ -45,3 +45,7 @@ jobs:
       - name: Upload Chart
         run: |
           ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template "chart-{{ .Version }}" --token ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Chart index
+        run: |
+          mkdir -p .cr-index
+          ./cr index -o orkarstoft -r kscale --push --release-name-template "chart-{{ .Version }}" --token ${{ secrets.GITHUB_TOKEN }}
