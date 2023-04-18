@@ -1,5 +1,5 @@
-name-template: "$RESOLVED_VERSION"
-tag-template: "$RESOLVED_VERSION"
+name-template: "app-$RESOLVED_VERSION"
+tag-template: "app-$RESOLVED_VERSION"
 include-labels:
   - app
 tag-prefix: "app-"
