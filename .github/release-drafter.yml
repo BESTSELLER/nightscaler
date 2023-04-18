@@ -1,8 +1,8 @@
 name-template: "$RESOLVED_VERSION"
 tag-template: "$RESOLVED_VERSION"
-exclude-labels:
-  - helm-chart
-tag-prefix: ""
+include-labels:
+  - app
+tag-prefix: "app-"
 categories:
   - title: Breaking Changes 💥
     labels:
@@ -32,6 +32,10 @@ version-resolver:
     labels:
       - "patch"
   default: patch
+autolabeler:
+  - label: app
+    files:
+      - "!chart/**"
 template: |
 
   $CHANGES
