@@ -21,7 +21,7 @@ RUN adduser \
 COPY . .
 RUN go build -buildvcs=false -tags netgo -trimpath -tags netgo -ldflags="-w -s" -o ./kscale .
 
-RUN upx --brute --lzma kscale
+RUN upx --best --lzma kscale
 
 FROM scratch
 
