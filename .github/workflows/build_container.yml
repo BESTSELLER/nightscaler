@@ -34,7 +34,7 @@ jobs:
             ghcr.io/orkarstoft/kscale
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=semver,pattern={{version#app-}}
+            type=semver,pattern={{version}},value={{version#app-}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
       - name: Build and push
