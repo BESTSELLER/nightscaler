@@ -2,8 +2,8 @@ name: Build image and push to GHCR
 
 on:
   push:
-    tags-ignore:
-      - 'chart-*'
+    tags:
+      - 'app-*'
 
 jobs:
   build-and-push-image:
