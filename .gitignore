@@ -1,2 +1,8 @@
+# chart-releaser specific
+.cr-index
+.cr-release-packages
+
+# Other
 build.sh
 deployment.yml
+values.yaml
