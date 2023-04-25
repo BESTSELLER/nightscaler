@@ -3,7 +3,7 @@ name: Build image and push to GHCR
 on:
   push:
     tags:
-      - 'app-*'
+      - 'v*'
 
 jobs:
   build-and-push-image:
