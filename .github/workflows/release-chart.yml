@@ -63,8 +63,14 @@ jobs:
           chmod +x cr
       - name: Package and Upload Chart
         run: |
+          # Package the chart
           ./cr package chart
-          ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
+
+          # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
+          # ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
+        
+          # Upload the chart to the release
+          gh release upload ${{ steps.get_chart_release.outputs.tag_name }} .cr-release-packages/kscale-${{ steps.get_chart_release.outputs.tag_name#chart- }}.tgz
       - name: Update Chart index
         run: |
           mkdir -p .cr-index
