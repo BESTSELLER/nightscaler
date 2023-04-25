@@ -62,6 +62,8 @@ jobs:
           # Make executable
           chmod +x cr
       - name: Package and Upload Chart
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Package the chart
           ./cr package chart
