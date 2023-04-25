@@ -61,11 +61,9 @@ jobs:
           tar -zxvf chart-releaser.tar.gz
           # Make executable
           chmod +x cr
-      - name: Package Chart
+      - name: Package and Upload Chart
         run: |
           ./cr package chart
-      - name: Upload Chart
-        run: |
           ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
       - name: Update Chart index
         run: |
