@@ -69,8 +69,12 @@ jobs:
           # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
           # ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
         
+          # Create small release-tag
+          CHART_SEMVER=${{ steps.get_chart_release.outputs.tag_name }}
+          CHART_SEMVER=${CHART_SEMVER#chart-}
+
           # Upload the chart to the release
-          gh release upload ${{ steps.get_chart_release.outputs.tag_name }} .cr-release-packages/kscale-${{ steps.get_chart_release.outputs.tag_name#chart- }}.tgz
+          gh release upload ${{ steps.get_chart_release.outputs.tag_name }} "".cr-release-packages/kscale-$CHART_SEMVER.tgz"
       - name: Update Chart index
         run: |
           mkdir -p .cr-index
