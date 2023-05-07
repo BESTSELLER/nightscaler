@@ -20,10 +20,29 @@ func Listen() error {
 		return fmt.Errorf("pubsub.NewClient error: %v", err)
 	}
 
-	// Create subscription
-	subscription, err := createSubscription(ctx, client)
+	// Create subscription name
+	subscriptionName := fmt.Sprintf("kscale-%s", config.Config.ClusterName)
+	var subscription *pubsub.Subscription
+	// Check if subscription exists
+	subscription = client.Subscription(subscriptionName)
+	exists, err := subscription.Exists(ctx)
 	if err != nil {
-		return fmt.Errorf("pubsub.CreateSubscription error: %v", err)
+		return fmt.Errorf("pubsub.Subscription.Exists error: failed to check if subscription exists %v", err)
+	}
+
+	// Create subscription if it doesn't exist
+	if !exists {
+		subscription, err = createSubscription(ctx, client, subscriptionName)
+		if err != nil {
+			return fmt.Errorf("pubsub.CreateSubscription error: %v", err)
+		}
+	} else {
+		subConf, err := subscription.Config(ctx)
+		if err != nil {
+			return fmt.Errorf("pubsub.Subscription.Config error: %v", err)
+		}
+
+		fmt.Printf("[INFO]: Subscription %s already exists with attribute filter \"%s\"\n", subscriptionName, subConf.Filter)
 	}
 
 	// Receive messages
