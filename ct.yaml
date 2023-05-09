@@ -1,0 +1,4 @@
+chart-dirs:
+  - .
+validate-maintainers: false
+target-branch: main
