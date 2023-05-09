@@ -18,7 +18,7 @@ pubsub:
 image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-85d7e3c"
+  tag: "v0.1.0"
 
 
 serviceAccount:
