@@ -56,10 +56,6 @@ jobs:
           sed -i "s/appVersion: .*/appVersion: $APP_TAG_NAME/" charts/kcale/Chart.yaml
           sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml
 
-          echo $CHART_TAG_NAME
-          echo $APP_TAG_NAME
-          echo "$(cat charts/kcale/Chart.yaml)"
-          
       - name: Install Chart Releaser
         run: |
           # Get the tar file         
@@ -76,7 +72,7 @@ jobs:
           ./cr package charts/kcale
 
           # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
-          # ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} --skip-existing
+          # ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
         
           # Create small release-tag
           CHART_SEMVER=${{ steps.get_chart_release.outputs.tag_name }}
