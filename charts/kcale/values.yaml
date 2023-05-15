@@ -18,7 +18,7 @@ pubsub:
 image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-85d7e3c"
+  tag: "0.1.0"
 
 
 serviceAccount:
@@ -29,7 +29,7 @@ serviceAccount:
     iam.gke.io/gcp-service-account: kscale@ok2-pub-dev-f3ae.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  #name: ""
+  # name: ""
 
 podAnnotations: {}
 
