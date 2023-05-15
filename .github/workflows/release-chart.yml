@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'chart-*'
+    branches:
+      - 36-bug-ci-doesnt-replace-values-in-chartyaml-correctly
 
 jobs:
   release:
@@ -49,9 +51,9 @@ jobs:
           CHART_TAG_NAME=${CHART_TAG_NAME#chart-}
 
           # Replace strings in charts/kcale/Chart.yaml
-          sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag_name }}/" charts/kcale/Chart.yaml
-          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml
-          cat charts/kcale/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag_name }}/" charts/kcale/Chart.yaml > charts/kcale/Chart.yaml
+          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml > charts/kcale/Chart.yaml
+          
 
       - name: Install Chart Releaser
         run: |
