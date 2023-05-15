@@ -49,10 +49,13 @@ jobs:
           # Remove prefix '-chart' from tag name
           CHART_TAG_NAME=${{ steps.get_chart_release.outputs.tag_name }}
           CHART_TAG_NAME=${CHART_TAG_NAME#chart-}
+          APP_TAG_NAME=${{ steps.get_app_release.outputs.tag_name }}
+          APP_TAG_NAME=${APP_TAG_NAME#v}
 
           # Replace strings in charts/kcale/Chart.yaml
-          sed -i "s/appVersion: .*/appVersion: ${{ steps.get_app_release.outputs.tag_name }}/" charts/kcale/Chart.yaml > charts/kcale/Chart.yaml
-          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml > charts/kcale/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: $APP_TAG_NAME/" charts/kcale/Chart.yaml
+          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml
+
           echo $CHART_TAG_NAME
           echo ${{ steps.get_app_release.outputs.tag_name }}
           echo < charts/kcale/Chart.yaml
