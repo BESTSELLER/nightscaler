@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'chart-*'
-    branches:
-      - 36-bug-ci-doesnt-replace-values-in-chartyaml-correctly
 
 jobs:
   release:
