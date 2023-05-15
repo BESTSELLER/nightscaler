@@ -57,9 +57,9 @@ jobs:
           sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml
 
           echo $CHART_TAG_NAME
-          echo ${{ steps.get_app_release.outputs.tag_name }}
-          echo < charts/kcale/Chart.yaml
-
+          echo $APP_TAG_NAME
+          echo "$(cat charts/kcale/Chart.yaml)"
+          
       - name: Install Chart Releaser
         run: |
           # Get the tar file         
