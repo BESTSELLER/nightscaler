@@ -12,8 +12,12 @@ import (
 func ScaleNamespaceUp(namespace string, additionalTime time.Duration) {
 	c := client()
 
-	// Create timestamps for annotations
-	t := time.Now()
+	location, err := time.LoadLocation(config.Config.TimeZone)
+	if err != nil {
+		panic(err)
+	}
+
+	t := time.Now().In(location)
 	now := t.Format("2006-01-02T15:04:05+00:00")
 	end := t.Add(additionalTime).Format("2006-01-02T15:04:05+00:00")
 	timeString := fmt.Sprintf("%s-%s", now, end)

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/kelseyhightower/envconfig"
@@ -9,6 +10,7 @@ import (
 
 type config struct {
 	ProjectID   string `envconfig:"PROJECT_ID" required:"true"`
+	TimeZone    string `envconfig:"TIMEZONE" default:"Europe/Copenhagen"`
 	ClusterName string `envconfig:"CLUSTERNAME" required:"false"`
 	Topic       string `envconfig:"TOPIC" required:"true"`
 	Debug       bool   `envconfig:"DEBUG" default:"false"`
@@ -24,6 +26,10 @@ func Init() {
 
 	if Config.ProjectID == "" || Config.Topic == "" {
 		log.Fatal("Missing required env variables")
+	}
+
+	if Config.Debug {
+		fmt.Printf("[DEBUG]: Config is: %+v\n", Config)
 	}
 
 	if Config.ClusterName == "" {

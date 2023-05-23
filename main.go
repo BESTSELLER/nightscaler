@@ -12,6 +12,7 @@ func main() {
 
 	fmt.Println("[INFO]: Starting KScale")
 	fmt.Printf("[INFO]: Creating subscriber for topic %s in project %s\n", config.Config.Topic, config.Config.ProjectID)
+
 	err := pubsub.Listen()
 	if err != nil {
 		fmt.Printf("Error: %s", err)
