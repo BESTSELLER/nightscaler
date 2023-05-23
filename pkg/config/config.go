@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/kelseyhightower/envconfig"
@@ -25,6 +26,10 @@ func Init() {
 
 	if Config.ProjectID == "" || Config.Topic == "" {
 		log.Fatal("Missing required env variables")
+	}
+
+	if Config.Debug {
+		fmt.Printf("[DEBUG]: Config is: %+v\n", Config)
 	}
 
 	if Config.ClusterName == "" {
