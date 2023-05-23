@@ -9,6 +9,7 @@ import (
 
 type config struct {
 	ProjectID   string `envconfig:"PROJECT_ID" required:"true"`
+	TimeZone    string `envconfig:"TIMEZONE" default:"Europe/Copenhagen"`
 	ClusterName string `envconfig:"CLUSTERNAME" required:"false"`
 	Topic       string `envconfig:"TOPIC" required:"true"`
 	Debug       bool   `envconfig:"DEBUG" default:"false"`
