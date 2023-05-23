@@ -2,7 +2,7 @@ FROM golang:1.20-alpine AS builder
 
 ARG UPX_VERSION=4.0.2-r0
 
-RUN apk update && apk add --no-cache ca-certificates upx=$UPX_VERSION && update-ca-certificates
+RUN apk update && apk add --no-cache ca-certificates upx=$UPX_VERSION tzdata && update-ca-certificates
 
 WORKDIR /app
 
@@ -28,6 +28,7 @@ FROM scratch
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder --chown=kscale:kscale /app/kscale /app/kscale
 
 USER kscale:kscale
