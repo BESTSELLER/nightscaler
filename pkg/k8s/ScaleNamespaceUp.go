@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/orkarstoft/kscale/pkg/config"
+	"github.com/rs/zerolog/log"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -22,9 +23,7 @@ func ScaleNamespaceUp(namespace string, additionalTime time.Duration) {
 	end := t.Add(additionalTime).Format("2006-01-02T15:04:05+00:00")
 	timeString := fmt.Sprintf("%s-%s", now, end)
 
-	if config.Config.Debug {
-		fmt.Printf("[DEBUG]: timeString is set to: %s\n", timeString)
-	}
+	log.Debug().Msgf("timeString is set to: %s", timeString)
 
 	// Get namespace
 	result, err := c.CoreV1().Namespaces().Get(context.TODO(), namespace, metav1.GetOptions{})
@@ -41,5 +40,5 @@ func ScaleNamespaceUp(namespace string, additionalTime time.Duration) {
 		panic(err.Error())
 	}
 
-	fmt.Printf("[INFO]: Namespace %s is now up for %v hours\n", namespace, additionalTime.Hours())
+	log.Info().Msgf("Namespace %s is now up for %v hours", namespace, additionalTime.Hours())
 }

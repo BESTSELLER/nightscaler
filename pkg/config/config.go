@@ -1,11 +1,9 @@
 package config
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/kelseyhightower/envconfig"
 	"github.com/orkarstoft/kscale/pkg/instancemetadata"
+	"github.com/rs/zerolog/log"
 )
 
 type config struct {
@@ -21,21 +19,21 @@ var Config config
 func Init() {
 	err := envconfig.Process("KSCALE", &Config)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal().Err(err).Msg("Failed to process env variables")
 	}
 
 	if Config.ProjectID == "" || Config.Topic == "" {
-		log.Fatal("Missing required env variables")
+		log.Fatal().Msg("PROJECT_ID and TOPIC must be set")
 	}
 
 	if Config.Debug {
-		fmt.Printf("[DEBUG]: Config is: %+v\n", Config)
+		log.Debug().Msg("Debug logging enabled")
 	}
 
 	if Config.ClusterName == "" {
 		clustername, err := instancemetadata.GetGCPInstanceMetadata()
 		if err != nil {
-			log.Fatalf("Failed to get cluster name from GCP Instance Metadata: %v", err)
+			log.Fatal().Err(err).Msg("Failed to get cluster name from instance metadata")
 		}
 		Config.ClusterName = clustername
 	}

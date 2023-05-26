@@ -9,6 +9,7 @@ import (
 	"cloud.google.com/go/pubsub"
 	"github.com/orkarstoft/kscale/pkg/config"
 	"github.com/orkarstoft/kscale/pkg/k8s"
+	"github.com/rs/zerolog/log"
 )
 
 func Listen() error {
@@ -42,14 +43,12 @@ func Listen() error {
 			return fmt.Errorf("pubsub.Subscription.Config error: %v", err)
 		}
 
-		fmt.Printf("[INFO]: Subscription %s already exists with attribute filter \"%s\"\n", subscriptionName, subConf.Filter)
+		log.Info().Msgf("Subscription %s already exists with attribute filter '%s'", subscriptionName, subConf.Filter)
 	}
 
 	// Receive messages
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
-		if config.Config.Debug {
-			fmt.Printf("[DEBUG]: Received message: %s\n", string(msg.Data))
-		}
+		log.Debug().Msgf("Received message: %s", string(msg.Data))
 
 		// Unmarshal message
 		var m PubSubMsg
@@ -58,15 +57,13 @@ func Listen() error {
 		}
 
 		if m.Action == "kscale_scale_namespace_up" {
-			fmt.Printf("[INFO]: Scaling %s namespace %s up\n", m.Cluster, m.Namespace)
+			log.Info().Msgf("Scaling %s namespace %s up", m.Cluster, m.Namespace)
 			convertIntToTimeDuration, err := time.ParseDuration(fmt.Sprintf("%dh", m.Duration))
 			if err != nil {
 				panic(err)
 			}
 
-			if config.Config.Debug {
-				fmt.Printf("[DEBUG]: Duration: %d, Duration in time.Duration: %s\n", m.Duration, convertIntToTimeDuration)
-			}
+			log.Debug().Msgf("Duration: %d, Duration in time.Duration: %s", m.Duration, convertIntToTimeDuration)
 
 			k8s.ScaleNamespaceUp(m.Namespace, convertIntToTimeDuration)
 		}

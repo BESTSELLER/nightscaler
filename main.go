@@ -1,20 +1,21 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/orkarstoft/kscale/pkg/config"
+	"github.com/orkarstoft/kscale/pkg/logging"
 	"github.com/orkarstoft/kscale/pkg/pubsub"
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
 	config.Init()
+	logging.Init()
 
-	fmt.Println("[INFO]: Starting KScale")
-	fmt.Printf("[INFO]: Creating subscriber for topic %s in project %s\n", config.Config.Topic, config.Config.ProjectID)
+	log.Info().Msg("Starting kscale")
+	log.Info().Msgf("Creating subscriber for topic %s in project %s", config.Config.Topic, config.Config.ProjectID)
 
 	err := pubsub.Listen()
 	if err != nil {
-		fmt.Printf("Error: %s", err)
+		log.Fatal().Err(err).Msg("Failed to listen to pubsub")
 	}
 }

@@ -17,7 +17,7 @@ func Listen(subscriptionPath string) {
 	subscriber := client(subscriptionPath)
 
 	// Listen for messages
-	log.Printf("Listening to messages on %s\n", subscriptionPath)
+	log.Printf("Listening to messages on %s", subscriptionPath)
 	var receiveCount int32
 
 	cctx, cancel := context.WithCancel(ctx)
