@@ -2,9 +2,9 @@ package pubsublite
 
 import (
 	"context"
-	"log"
 
 	"cloud.google.com/go/pubsublite/pscompat"
+	"github.com/orkarstoft/kscale/pkg/logger"
 )
 
 func client(subscriptionPath string) *pscompat.SubscriberClient {
@@ -13,7 +13,7 @@ func client(subscriptionPath string) *pscompat.SubscriberClient {
 	// Create the subscriber client.
 	subscriber, err := pscompat.NewSubscriberClient(ctx, subscriptionPath)
 	if err != nil {
-		log.Fatalf("pscompat.NewSubscriberClientWithSettings error: %v", err)
+		logger.Log.Fatal().Err(err).Msg("pscompat.NewSubscriberClientWithSettings error")
 	}
 
 	return subscriber

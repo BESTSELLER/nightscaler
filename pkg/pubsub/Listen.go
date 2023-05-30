@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/pubsub"
 	"github.com/orkarstoft/kscale/pkg/config"
 	"github.com/orkarstoft/kscale/pkg/k8s"
-	"github.com/rs/zerolog/log"
+	"github.com/orkarstoft/kscale/pkg/logger"
 )
 
 func Listen() error {
@@ -43,27 +44,27 @@ func Listen() error {
 			return fmt.Errorf("pubsub.Subscription.Config error: %v", err)
 		}
 
-		log.Info().Msgf("Subscription %s already exists with attribute filter '%s'", subscriptionName, subConf.Filter)
+		logger.Log.Info().Msgf("Subscription %s already exists with attribute filter '%s'", subscriptionName, strings.ReplaceAll(subConf.Filter, "\"", ""))
 	}
 
 	// Receive messages
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
-		log.Debug().Msgf("Received message: %s", string(msg.Data))
+		logger.Log.Debug().Msgf("Received message: %s", string(msg.Data))
 
 		// Unmarshal message
 		var m PubSubMsg
 		if err := json.Unmarshal(msg.Data, &m); err != nil {
-			panic(err)
+			logger.Log.Panic().Err(err).Msg("Failed to unmarshal message")
 		}
 
 		if m.Action == "kscale_scale_namespace_up" {
-			log.Info().Msgf("Scaling %s namespace %s up", m.Cluster, m.Namespace)
+			logger.Log.Info().Msgf("Scaling %s namespace %s up", m.Cluster, m.Namespace)
 			convertIntToTimeDuration, err := time.ParseDuration(fmt.Sprintf("%dh", m.Duration))
 			if err != nil {
-				panic(err)
+				logger.Log.Panic().Err(err).Msg("Failed to parse duration")
 			}
 
-			log.Debug().Msgf("Duration: %d, Duration in time.Duration: %s", m.Duration, convertIntToTimeDuration)
+			logger.Log.Debug().Msgf("Duration: %d, Duration in time.Duration: %s", m.Duration, convertIntToTimeDuration)
 
 			k8s.ScaleNamespaceUp(m.Namespace, convertIntToTimeDuration)
 		}
