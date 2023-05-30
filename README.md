@@ -1,5 +1,7 @@
 # kscale
 
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/orkarstoft/kscale?sort=semver&style=flat-square) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/orkarstoft/kscale?style=flat-square)
+
 kscale is an application designed to annotate Kubernetes namespaces based on Pub/Sub messages. It serves as an extension to kube-downscaler, providing additional functionality for managing forced-uptime periods within namespaces.
 
 ## Overview
@@ -22,6 +24,7 @@ Kubernetes clusters often utilize kube-downscaler to scale down namespaces and c
 - Helm
 
 ### Installation
+To be added.
 
 ### Usage
 1. Create an interface (e.g., a website) that allows users to trigger actions that require forced-uptime periods.
