@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/pubsub"
 	"github.com/orkarstoft/kscale/pkg/config"
+	"github.com/orkarstoft/kscale/pkg/logger"
 )
 
 func createSubscription(ctx context.Context, client *pubsub.Client, subName string) (*pubsub.Subscription, error) {
@@ -20,7 +21,7 @@ func createSubscription(ctx context.Context, client *pubsub.Client, subName stri
 		return &pubsub.Subscription{}, fmt.Errorf("pubsub.CreateSubscription error: %v", err)
 	}
 
-	fmt.Printf("[INFO]: Subscription %s created to topic %s with attribute filter \"attributes.cluster = %s\"\n", subName, config.Config.Topic, config.Config.ClusterName)
+	logger.Log.Info().Msgf("Subscription %s created to topic %s with attribute filter 'attributes.cluster = %s'", subName, config.Config.Topic, config.Config.ClusterName)
 
 	return subscription, nil
 }
