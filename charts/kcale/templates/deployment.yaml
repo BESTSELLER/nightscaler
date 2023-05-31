@@ -39,8 +39,8 @@ spec:
           - name: KSCALE_TIMEZONE
             value: {{ .Values.podEnvVars.timezone }}
           - name: KSCALE_DEBUG
-            value: {{ .Values.podEnvVars.debug }}
+            value: "{{ .Values.podEnvVars.debug }}"
           - name: KSCALE_JSON_LOGGING
-            value: {{ .Values.podEnvVars.jsonLogging }}
+            value: "{{ .Values.podEnvVars.jsonLogging }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
