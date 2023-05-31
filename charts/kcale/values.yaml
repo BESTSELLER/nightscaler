@@ -38,8 +38,8 @@ podSecurityContext: {}
 
 podEnvVars:
   timezone: UTC
-  debug: "false"
-  jsonLogging: "true"
+  debug: 'false'
+  jsonLogging: 'true'
 
 securityContext: {}
   # capabilities:
