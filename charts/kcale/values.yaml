@@ -26,7 +26,7 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    iam.gke.io/gcp-service-account: kscale@ok2-pub-dev-f3ae.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: kscale@your-project-id.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   # name: ""
@@ -35,6 +35,11 @@ podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
+
+podEnvVars:
+  timezone: UTC
+  debug: false
+  jsonLogging: true
 
 securityContext: {}
   # capabilities:
