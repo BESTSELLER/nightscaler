@@ -19,8 +19,8 @@ func ScaleNamespaceUp(namespace string, additionalTime time.Duration) {
 	}
 
 	t := time.Now().In(location)
-	now := t.Format("2006-01-02T15:04:05-0700")
-	end := t.Add(additionalTime).Format("2006-01-02T15:04:05-0700")
+	now := t.Format("2006-01-02T15:04:05-07:00")
+	end := t.Add(additionalTime).Format("2006-01-02T15:04:05-07:00")
 	timeString := fmt.Sprintf("%s-%s", now, end)
 
 	logger.Log.Debug().Msgf("timeString is set to: %s", timeString)
