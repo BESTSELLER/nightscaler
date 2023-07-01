@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/pubsub v1.31.0
 	cloud.google.com/go/pubsublite v1.7.0
 	github.com/rs/zerolog v1.29.1
-	k8s.io/apimachinery v0.27.2
+	k8s.io/apimachinery v0.27.3
 )
 
 require (
