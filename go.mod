@@ -5,7 +5,7 @@ go 1.20
 require (
 	cloud.google.com/go/pubsub v1.33.0
 	cloud.google.com/go/pubsublite v1.7.0
-	github.com/rs/zerolog v1.29.1
+	github.com/rs/zerolog v1.30.0
 	k8s.io/apimachinery v0.27.4
 )
 
