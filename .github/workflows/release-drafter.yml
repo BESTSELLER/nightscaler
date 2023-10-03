@@ -4,13 +4,13 @@ on:
   push:
     # branches to consider in the event; optional, defaults to all
     branches:
-      - main
+      - master
 
 jobs:
   update_release_draft:
     permissions:
-      contents: 'write'
-      pull-requests: 'read'
+      contents: "write"
+      pull-requests: "read"
 
     runs-on: ubuntu-latest
     steps:
