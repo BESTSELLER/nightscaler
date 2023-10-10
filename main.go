@@ -40,6 +40,6 @@ func sendNamespaces() {
 			logger.Log.Fatal().Err(err).Msg("failed to send Pub/Sub message")
 		}
 
-		time.Sleep(10 * time.Second)
+		time.Sleep(10 * time.Minute)
 	}
 }
