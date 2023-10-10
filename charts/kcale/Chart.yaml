@@ -1,6 +1,6 @@
 apiVersion: v2
-name: kscale
-description: A Helm chart for kscale deployment
+name: nightscaler
+description: A Helm chart for nightscaler deployment
 type: application
 version: 0.0.1
 appVersion: 0.0.1

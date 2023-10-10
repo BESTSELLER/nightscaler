@@ -27,20 +27,20 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "ghcr.io/orkarstoft/kscale:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "ghcr.io/BESTSELLER/nightscaler:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: KSCALE_PROJECT_ID
+          - name: NIGHTSCALER_PROJECT_ID
             value: {{ .Values.pubsub.projectId }}
-          - name: KSCALE_TOPIC
+          - name: NIGHTSCALER_TOPIC
             value: {{ .Values.pubsub.topic }}
-          - name: KSCALE_CLUSTERNAME
+          - name: NIGHTSCALER_CLUSTERNAME
             value: {{ .Values.pubsub.clustername }}
-          - name: KSCALE_TIMEZONE
+          - name: NIGHTSCALER_TIMEZONE
             value: {{ .Values.podEnvVars.timezone }}
-          - name: KSCALE_DEBUG
+          - name: NIGHTSCALER_DEBUG
             value: "{{ .Values.podEnvVars.debug }}"
-          - name: KSCALE_JSON_LOGGING
+          - name: NIGHTSCALER_JSON_LOGGING
             value: "{{ .Values.podEnvVars.jsonLogging }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

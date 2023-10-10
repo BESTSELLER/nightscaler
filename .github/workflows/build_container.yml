@@ -3,7 +3,7 @@ name: Build image and push to GHCR
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build-and-push-image:
@@ -13,7 +13,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: '.'
+        working-directory: "."
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -31,7 +31,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ghcr.io/orkarstoft/kscale
+            ghcr.io/BESTSELLER/nightscaler
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}

@@ -3,7 +3,7 @@ name: Release Chart
 on:
   push:
     tags:
-      - 'chart-*'
+      - "chart-*"
 
 jobs:
   release:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Install Chart Releaser
         run: |
-          # Get the tar file         
+          # Get the tar file
           curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.5.0/chart-releaser_1.5.0_linux_amd64.tar.gz
           # Untar the file
           tar -zxvf chart-releaser.tar.gz
@@ -70,15 +70,15 @@ jobs:
           ./cr package charts/kcale
 
           # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
-          # ./cr upload -o orkarstoft -r kscale -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
-        
+          # ./cr upload -o orkarstoft -r nightscaler -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
+
           # Create small release-tag
           CHART_SEMVER=${{ steps.get_chart_release.outputs.tag_name }}
           CHART_SEMVER=${CHART_SEMVER#chart-}
 
           # Upload the chart to the release
-          gh release upload ${{ steps.get_chart_release.outputs.tag_name }} ".cr-release-packages/kscale-$CHART_SEMVER.tgz"
+          gh release upload ${{ steps.get_chart_release.outputs.tag_name }} ".cr-release-packages/nightscaler-$CHART_SEMVER.tgz"
       - name: Update Chart index
         run: |
           mkdir -p .cr-index
-          ./cr index -o orkarstoft -r kscale --push --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }} 
+          ./cr index -o orkarstoft -r nightscaler --push --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}

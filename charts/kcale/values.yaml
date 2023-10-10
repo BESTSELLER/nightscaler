@@ -20,20 +20,20 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.1.0"
 
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
   annotations:
-    iam.gke.io/gcp-service-account: kscale@your-project-id.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: nightscaler@your-project-id.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   # name: ""
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
 podEnvVars:
@@ -41,7 +41,8 @@ podEnvVars:
   debug: false
   jsonLogging: true
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL

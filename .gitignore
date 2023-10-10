@@ -7,3 +7,6 @@ build.sh
 deployment.yml
 values.yaml
 !charts/*/values.yaml
+
+# Binaries
+nightscaler
