@@ -6,6 +6,7 @@ on:
       - Build image and push to GHCR
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   lint-test:
