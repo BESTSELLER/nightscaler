@@ -6,8 +6,6 @@ on:
       - Build-image-and-push-to-GHCR
     types:
       - completed
-    branches:
-      - "*"
 
 jobs:
   lint-test:
