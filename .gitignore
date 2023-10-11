@@ -9,4 +9,4 @@ values.yaml
 !charts/*/values.yaml
 
 # Binaries
-nightscaler
+/nightscaler
