@@ -3,7 +3,7 @@ name: Lint and Test Charts
 on:
   workflow_run:
     workflows:
-      - "Build image and push to GHCR"
+      - Build image and push to GHCR
     types:
       - completed
 
