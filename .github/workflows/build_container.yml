@@ -47,3 +47,58 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
+  debugger:
+    runs-on: ubuntu-latest
+    needs: [build-and-push-image]
+    steps:
+      - uses: hmarr/debug-action@v2
+      - name: tags
+        run: echo "${{ needs.build-and-push-image.outputs.tags }}"
+      - name: labels
+        run: echo "${{ needs.build-and-push-image.outputs.labels }}"
+      - name: Step 2
+        run: echo $(echo ${{ needs.build-and-push-image.outputs.tags }} | cut -d':' -f2)
+  lint-test:
+    runs-on: ubuntu-latest
+    needs: [build-and-push-image]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.2
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.4.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config ct.yaml --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config ct.yaml --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Create kind cluster
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: helm/kind-action@v1.8.0
+
+      - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --config ct.yaml --helm-extra-set-args "--set=image.tag=${GITHUB_REF#refs/heads/}" --target-branch ${{ github.event.repository.default_branch }}
