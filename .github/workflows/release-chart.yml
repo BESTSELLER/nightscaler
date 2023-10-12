@@ -70,7 +70,7 @@ jobs:
           ./cr package charts/kcale
 
           # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
-          # ./cr upload -o orkarstoft -r nightscaler -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
+          # ./cr upload -o BESTSELLER -r nightscaler -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
 
           # Create small release-tag
           CHART_SEMVER=${{ steps.get_chart_release.outputs.tag_name }}
