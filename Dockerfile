@@ -1,4 +1,4 @@
-FROM golang:1.21.1-alpine AS builder
+FROM golang:1.21.3-alpine AS builder
 
 ARG UPX_VERSION=4.0.2-r0
 
