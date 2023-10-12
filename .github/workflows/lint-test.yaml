@@ -7,6 +7,7 @@ on:
         "Build-image-and-push-to-GHCR/build-and-push-image",
         "build-and-push-image",
         "Build-image-and-push-to-GHCR",
+        "build",
       ]
     # types:
     #   - completed
