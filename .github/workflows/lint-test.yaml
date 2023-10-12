@@ -1,9 +1,10 @@
 name: Lint and Test Charts
 
 on:
-  push:
-    branches:
-      - "*"
+  workflow_run:
+    workflows: [Build image and push to GHCR]
+    types:
+      - completed
 
 jobs:
   lint-test:
