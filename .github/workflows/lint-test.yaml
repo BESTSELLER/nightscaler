@@ -1,14 +1,7 @@
 name: Lint and Test Charts
 
 on:
-  workflow_run:
-    workflows:
-      [
-        "Build-image-and-push-to-GHCR/build-and-push-image",
-        "build-and-push-image",
-        "Build-image-and-push-to-GHCR",
-        "build",
-      ]
+  - workflow_run
     # types:
     #   - completed
 
