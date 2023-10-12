@@ -2,13 +2,11 @@ name: Lint and Test Charts
 
 on:
   workflow_run:
-    workflows: [Build]
+    workflows: [Build image and push to GHCR]
+    types:
+      - completed
 
 jobs:
-  debugger:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: hmarr/debug-action@v2
   lint-test:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
