@@ -81,4 +81,4 @@ jobs:
       - name: Update Chart index
         run: |
           mkdir -p .cr-index
-          ./cr index -o orkarstoft -r nightscaler --push --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
+          ./cr index -o BESTSELLER -r nightscaler --push --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
