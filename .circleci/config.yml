@@ -40,7 +40,7 @@ workflows:
                   source ${BASH_ENV} || true
 
                   if [ -z "$CIRCLE_TAG" ]; then
-                    echo "export DEPLOY_TAG=$CIRCLE_BRANCH-$(echo $CIRCLE_SHA1)" >> $BASH_ENV
+                    echo "export DEPLOY_TAG=0.0.0-$(echo $CIRCLE_SHA1)" >> $BASH_ENV
                   else
                     echo "export DEPLOY_TAG=$(echo $CIRCLE_TAG)" >> $BASH_ENV
                   fi
