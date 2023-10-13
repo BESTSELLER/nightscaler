@@ -33,38 +33,25 @@ jobs:
           at: /tmp
       - generate_docker_tag
       - run:
-          name: Lint Helm Chart
-          command: |
-            changed=$(ct list-changed --config ct.yaml --target-branch master)
-            if [[ -n "$changed" ]]; then
-              echo "changed=true" >> $BASH_ENV
-            fi
-      - run:
           name: Run chart-testing (lint)
           command: |
             source $BASH_ENV
 
-            if [[ -n "$changed" ]]; then
-              ct lint --config ct.yaml --target-branch master
-            fi
+            ct lint --config ct.yaml --target-branch master
       - run:
           name: Install kind
           command: |
             source $BASH_ENV
 
-            if [[ -n "$changed" ]]; then
-              curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-$(uname)-amd64
-              chmod +x ./kind
-              sudo mv ./kind /usr/bin/kind
-            fi
+            curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-$(uname)-amd64
+            chmod +x ./kind
+            sudo mv ./kind /usr/bin/kind
       - run:
           name: Run chart-testing (install)
           command: |
             source $BASH_ENV
 
-            if [[ -n "$changed" ]]; then
-              ct install --config ct.yaml --helm-extra-set-args "--set=image.tag=$DEPLOY_TAG" --target-branch master
-            fi
+            ct install --config ct.yaml --helm-extra-set-args "--set=image.tag=$DEPLOY_TAG" --target-branch master
 
 workflows:
   build:
