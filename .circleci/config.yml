@@ -47,6 +47,10 @@ jobs:
             chmod +x ./kind
             mv ./kind /usr/bin/kind
       - run:
+          name: Create kind cluster
+          command: |
+            kind create cluster --image kindest/node:v1.26.6 --name cluster-registry --wait 30s
+      - run:
           name: Run chart-testing (install)
           command: |
             source $BASH_ENV
