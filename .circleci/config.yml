@@ -94,4 +94,4 @@ workflows:
       - lint-test:
           <<: *prod_context
           requires:
-            - cci-common/go_test_unit
+            - cci-common/build_n_push_docker
