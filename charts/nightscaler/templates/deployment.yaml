@@ -27,7 +27,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "ghcr.io/bestseller/nightscaler:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "europe-docker.pkg.dev/artifacts-pub-prod-b57f/public-docker/nightscaler:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: NIGHTSCALER_PROJECT_ID
