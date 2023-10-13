@@ -4,11 +4,6 @@ orbs:
   secret-injector: bestsellerit/secret-injector@2.5.1
   cci-common: bestsellerit/cci-common@1.13.5
 
-prod_filter: &prod_filter
-  filters:
-    branches:
-      only:
-        - master
 prod_context: &prod_context
   context:
     - es02-prod
@@ -34,7 +29,7 @@ workflows:
           requires:
             - cci-common/go_test_unit
             - cci-common/go_test_sonar
-          <<: [*prod_context, *prod_filter]
+          <<: *prod_context
           pre-steps:
             - run:
                 name: Generate Docker Tag
