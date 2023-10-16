@@ -33,6 +33,16 @@ jobs:
           at: /tmp
       - generate_docker_tag
       - run:
+          name: Install Helm chart-testing
+          command: |
+            curl -L https://github.com/helm/chart-testing/releases/download/v3.9.0/chart-testing_3.9.0_linux_amd64.tar.gz > chart-testing.tar.gz
+      - run:
+          name: Unpack Helm chart-testing
+          command: |
+            mkdir chart-testing && tar -xvzf chart-testing.tar.gz -C chart-testing
+            sudo cp chart-testing/ct /usr/bin/ct
+            rm -rf ./chart-testing && rm chart-testing.tar.gz
+      - run:
           name: Lint Helm Chart
           command: |
             changed=$(ct list-changed --config ct.yaml --target-branch master)
@@ -84,12 +94,13 @@ workflows:
           repo: public-docker
           tag: $DEPLOY_TAG
           requires:
-            - cci-common/go_test_unit
-            - cci-common/go_test_sonar
+            - secret-injector/dump-secrets-yaml
           <<: *prod_context
           pre-steps:
             - generate_docker_tag
       - lint-test:
           <<: *prod_context
           requires:
+            - cci-common/go_test_unit
+            - cci-common/go_test_sonar
             - cci-common/build_n_push_docker
