@@ -47,7 +47,9 @@ jobs:
       - run:
           name: Unpack Helm chart-testing
           command: |
-            mkdir chart-testing && tar -xvzf chart-testing.tar.gz -C chart-testing
+            mkdir chart-testing && \
+            mkdir /etc/ct && \
+            tar -xvzf chart-testing.tar.gz -C chart-testing
             sudo cp -R ./chart-testing/etc/*.yaml /etc/ct
             sudo cp chart-testing/ct /usr/bin/ct
             rm -rf ./chart-testing && rm chart-testing.tar.gz
