@@ -95,6 +95,30 @@ jobs:
             source $BASH_ENV
 
             ct install --config ct.yaml --helm-extra-set-args "--set=image.tag=$DEPLOY_TAG" --target-branch master
+  publish_chart:
+    executor:
+      name: cci-common/ci_image
+      flavor: "-google"
+    parameters:
+      version:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - cci-common/install_gcloud
+      - cci-common/gcloud_login
+      - run:
+          name: "Package and push helm chart"
+          command: |
+            source /tmp/secrets || true
+
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/cluster_secret.json
+
+            gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://$K8S_CLUSTER_artifact_registry_url
+
+            helm package charts/nightscaler --version << parameters.version >>
+            helm push nightscaler-<< parameters.version >>.tgz oci://$K8S_CLUSTER_artifact_registry_url/$K8S_CLUSTER_artifact_registry_project/public-docker
 
 workflows:
   build:
@@ -129,3 +153,15 @@ workflows:
             - cci-common/go_test_unit
             - cci-common/go_test_sonar
             - cci-common/build_n_push_docker
+  publish_prod_chart:
+    jobs:
+      - secret-injector/dump-secrets:
+          <<: *prod_context
+      - publish_chart:
+          name: Publish Prod Chart
+          version: $DEPLOY_TAG
+          pre-steps:
+            - generate_docker_tag
+          <<: *prod_context
+          requires:
+            - secret-injector/dump-secrets
