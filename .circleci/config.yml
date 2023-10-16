@@ -25,13 +25,20 @@ commands:
             fi
 jobs:
   lint-test:
-    docker:
-      - image: quay.io/helmpack/chart-testing:v3.9.0
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
       - checkout
       - attach_workspace:
           at: /tmp
       - generate_docker_tag
+      - run:
+          name: Lint Helm Chart
+          command: |
+            changed=$(ct list-changed --config ct.yaml --target-branch master)
+            if [[ -n "$changed" ]]; then
+              echo "changed=true" >> $BASH_ENV
+            fi
       - run:
           name: Run chart-testing (lint)
           command: |
