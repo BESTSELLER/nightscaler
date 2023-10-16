@@ -48,8 +48,14 @@ jobs:
           name: Unpack Helm chart-testing
           command: |
             mkdir chart-testing && tar -xvzf chart-testing.tar.gz -C chart-testing
+            sudo cp -R ./chart-testing/etc/*.yaml /etc/ct
             sudo cp chart-testing/ct /usr/bin/ct
             rm -rf ./chart-testing && rm chart-testing.tar.gz
+      - run:
+          name: Install dependencies for chart-testing
+          command: |
+            pip3 install yamale
+            pip3 install yamllint
       - run:
           name: Lint Helm Chart
           command: |
