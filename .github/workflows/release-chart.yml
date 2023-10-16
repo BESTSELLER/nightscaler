@@ -50,14 +50,14 @@ jobs:
           APP_TAG_NAME=${{ steps.get_app_release.outputs.tag_name }}
           APP_TAG_NAME=${APP_TAG_NAME#v}
 
-          # Replace strings in charts/kcale/Chart.yaml
-          sed -i "s/appVersion: .*/appVersion: $APP_TAG_NAME/" charts/kcale/Chart.yaml
-          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/kcale/Chart.yaml
+          # Replace strings in charts/nightscaler/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: $APP_TAG_NAME/" charts/nightscaler/Chart.yaml
+          sed -i "s/version: .*/version: $CHART_TAG_NAME/" charts/nightscaler/Chart.yaml
 
       - name: Install Chart Releaser
         run: |
           # Get the tar file
-          curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.5.0/chart-releaser_1.5.0_linux_amd64.tar.gz
+          curl -L -o chart-releaser.tar.gz https://github.com/helm/chart-releaser/releases/download/v1.6.0/chart-releaser_1.6.0_linux_amd64.tar.gz
           # Untar the file
           tar -zxvf chart-releaser.tar.gz
           # Make executable
@@ -67,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # Package the chart
-          ./cr package charts/kcale
+          ./cr package charts/nightscaler
 
           # Old upload but doesn't work because of release drafter. 'cr upload' create an release.
           # ./cr upload -o BESTSELLER -r nightscaler -p .cr-release-packages --release-name-template ${{ steps.get_chart_release.outputs.tag_name }} --token ${{ secrets.GITHUB_TOKEN }}
