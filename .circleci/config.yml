@@ -33,6 +33,14 @@ jobs:
           at: /tmp
       - generate_docker_tag
       - run:
+          name: Install Helm
+          command: |
+            curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+            sudo apt-get install apt-transport-https --yes
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+            sudo apt-get update
+            sudo apt-get install helm
+      - run:
           name: Install Helm chart-testing
           command: |
             curl -L https://github.com/helm/chart-testing/releases/download/v3.9.0/chart-testing_3.9.0_linux_amd64.tar.gz > chart-testing.tar.gz
@@ -83,16 +91,19 @@ workflows:
           <<: *prod_context
       - cci-common/go_test_unit:
           go_version: "1.21.3"
+          resource_class: large
           requires:
             - secret-injector/dump-secrets-yaml
       - cci-common/go_test_sonar:
           go_version: "1.21.3"
+          resource_class: large
           <<: *prod_context
           requires:
             - secret-injector/dump-secrets-yaml
       - cci-common/build_n_push_docker:
           repo: public-docker
           tag: $DEPLOY_TAG
+          resource_class: large
           requires:
             - secret-injector/dump-secrets-yaml
           <<: *prod_context
