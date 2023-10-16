@@ -80,6 +80,12 @@ jobs:
             chmod +x ./kind
             sudo mv ./kind /usr/bin/kind
       - run:
+          name: Download kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            sudo mv ./kubectl /usr/local/bin/kubectl
+      - run:
           name: Create kind cluster
           command: |
             kind create cluster --image kindest/node:v1.26.6 --name cluster-registry --wait 30s
