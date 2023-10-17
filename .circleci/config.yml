@@ -23,6 +23,7 @@ commands:
             else
               echo "export DEPLOY_TAG=$(echo $CIRCLE_TAG)" >> $BASH_ENV
             fi
+
 jobs:
   lint-test:
     machine:
@@ -121,7 +122,7 @@ jobs:
             helm push nightscaler-<< parameters.version >>.tgz oci://$K8S_CLUSTER_artifact_registry_url/$K8S_CLUSTER_artifact_registry_project/public-docker
 
 workflows:
-  build:
+  build-n-publish:
     jobs:
       - secret-injector/dump-secrets-yaml:
           secret-file: secrets-ci.yaml
@@ -129,7 +130,7 @@ workflows:
           <<: *prod_context
       - cci-common/go_test_unit:
           go_version: "1.21.3"
-          resource_class: large
+          resource_class: xlarge
           requires:
             - secret-injector/dump-secrets-yaml
       - cci-common/go_test_sonar:
@@ -153,15 +154,10 @@ workflows:
             - cci-common/go_test_unit
             - cci-common/go_test_sonar
             - cci-common/build_n_push_docker
-  publish_prod_chart:
-    jobs:
-      - secret-injector/dump-secrets:
-          <<: *prod_context
       - publish_chart:
-          name: Publish Prod Chart
           version: $DEPLOY_TAG
           pre-steps:
             - generate_docker_tag
           <<: *prod_context
           requires:
-            - secret-injector/dump-secrets
+            - lint-test
