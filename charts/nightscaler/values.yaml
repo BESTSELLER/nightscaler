@@ -10,7 +10,10 @@ pubsub:
   projectId: ""
   # Pub/Sub topic to subscribe to
   # REQUIRED
-  topic: ""
+  listen_topic: ""
+  # Pub/Sub topic to publish to
+  # REQUIRED
+  publish_topic: ""
   # Name of the cluster it is running in. Used to identify the cluster in the Pub/Sub message.
   # REQUIRED
   clustername: ""

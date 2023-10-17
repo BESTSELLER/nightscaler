@@ -119,7 +119,7 @@ jobs:
             gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://$K8S_CLUSTER_artifact_registry_url
 
             helm package charts/nightscaler --version << parameters.version >>
-            helm push nightscaler-<< parameters.version >>.tgz oci://$K8S_CLUSTER_artifact_registry_url/$K8S_CLUSTER_artifact_registry_project/public-docker
+            helm push nightscaler-<< parameters.version >>.tgz oci://$K8S_CLUSTER_artifact_registry_url/$K8S_CLUSTER_artifact_registry_project/public-docker/chart
 
 workflows:
   build-n-publish:

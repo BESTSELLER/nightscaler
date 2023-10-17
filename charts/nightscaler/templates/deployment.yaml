@@ -32,15 +32,19 @@ spec:
           env:
           - name: NIGHTSCALER_PROJECT_ID
             value: {{ .Values.pubsub.projectId }}
-          - name: NIGHTSCALER_TOPIC
-            value: {{ .Values.pubsub.topic }}
-          - name: NIGHTSCALER_CLUSTERNAME
-            value: {{ .Values.pubsub.clustername }}
+          - name: NIGHTSCALER_LISTEN_TOPIC
+            value: {{ .Values.pubsub.listen_topic }}
+          - name: NIGHTSCALER_PUBLISH_TOPIC
+            value: {{ .Values.pubsub.publish_topic }}
           - name: NIGHTSCALER_TIMEZONE
             value: {{ .Values.podEnvVars.timezone }}
           - name: NIGHTSCALER_DEBUG
             value: "{{ .Values.podEnvVars.debug }}"
           - name: NIGHTSCALER_JSON_LOGGING
             value: "{{ .Values.podEnvVars.jsonLogging }}"
+          {{- if .Values.pubsub.clustername }}
+          - name: NIGHTSCALER_CLUSTERNAME
+            value: {{ .Values.pubsub.clustername }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
