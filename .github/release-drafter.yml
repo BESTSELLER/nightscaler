@@ -1,7 +1,5 @@
 name-template: "v$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
-include-labels:
-  - app
 tag-prefix: "v"
 categories:
   - title: Breaking Changes 💥
@@ -32,12 +30,7 @@ version-resolver:
     labels:
       - "patch"
   default: patch
-autolabeler:
-  - label: app
-    files:
-      - "!chart/**"
 template: |
-
   $CHANGES
 
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
