@@ -1,6 +1,5 @@
-name-template: "v$RESOLVED_VERSION"
-tag-template: "v$RESOLVED_VERSION"
-tag-prefix: "v"
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
 categories:
   - title: Breaking Changes 💥
     labels:
@@ -33,4 +32,4 @@ version-resolver:
 template: |
   $CHANGES
 
-  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
