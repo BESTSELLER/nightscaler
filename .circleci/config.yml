@@ -4,6 +4,12 @@ prod_context: &prod_context
   context:
     - es02-prod
     - shared
+filter: &filter
+  filters:
+    tags:
+      only: /^[0-9]+(\.[0-9]+)*(-.*)*$/
+    branches:
+      only: /.*/
 
 orbs:
   secret-injector: bestsellerit/secret-injector@2.5.1
@@ -127,29 +133,30 @@ workflows:
       - secret-injector/dump-secrets-yaml:
           secret-file: secrets-ci.yaml
           vault-oidc: true
-          <<: *prod_context
+          <<: [*prod_context, *filter]
       - cci-common/go_test_unit:
           go_version: "1.21.3"
           resource_class: xlarge
           requires:
             - secret-injector/dump-secrets-yaml
+          <<: [*prod_context, *filter]
       - cci-common/go_test_sonar:
           go_version: "1.21.3"
           resource_class: large
-          <<: *prod_context
           requires:
             - secret-injector/dump-secrets-yaml
+          <<: [*prod_context, *filter]
       - cci-common/build_n_push_docker:
           repo: public-docker
           tag: $DEPLOY_TAG
           resource_class: large
           requires:
             - secret-injector/dump-secrets-yaml
-          <<: *prod_context
+          <<: [*prod_context, *filter]
           pre-steps:
             - generate_docker_tag
       - lint-test:
-          <<: *prod_context
+          <<: [*prod_context, *filter]
           requires:
             - cci-common/go_test_unit
             - cci-common/go_test_sonar
@@ -158,6 +165,6 @@ workflows:
           version: $DEPLOY_TAG
           pre-steps:
             - generate_docker_tag
-          <<: *prod_context
+          <<: [*prod_context, *filter]
           requires:
             - lint-test
