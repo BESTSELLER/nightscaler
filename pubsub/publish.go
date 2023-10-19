@@ -44,15 +44,16 @@ func Publish(msg []v1.Namespace, att Attributes) error {
 	msgId, err := pubsubPublisher.Publish(ctx, &pubsub.Message{
 		Data: []byte(msgJSON),
 		Attributes: map[string]string{
-			"entity": att.Entity,
-			"action": att.Action,
+			"entity":  att.Entity,
+			"action":  att.Action,
+			"cluster": config.Config.ClusterName,
 		},
 	}).Get(ctx)
 	if err != nil {
 		return err
 	}
 
-	logger.Log.Debug().Msgf("Published a message; msg ID: %v\n", msgId)
+	logger.Log.Debug().Msgf("Published a message; msg ID: %v", msgId)
 
 	return nil
 }

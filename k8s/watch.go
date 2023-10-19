@@ -70,12 +70,12 @@ func Watch(clientset *kubernetes.Clientset) {
 		creationTime := ns.GetCreationTimestamp().Time
 		fiveMinsAgo := time.Now().Add(-5 * time.Minute)
 		if event.Type == apiWatch.Added && creationTime.Before(fiveMinsAgo) {
-			logger.Log.Debug().Msgf(">> skip older events (creationTime: %s, currentTime: %s)\n", creationTime.Format(time.RFC3339), time.Now().Format(time.RFC3339))
+			logger.Log.Debug().Msgf(">> skip older events (creationTime: %s, currentTime: %s)", creationTime.Format(time.RFC3339), time.Now().Format(time.RFC3339))
 			continue
 		}
 
 		// print some info about the event
-		logger.Log.Debug().Msgf("%s %s (createdAt: %s, phase: %s)\n", event.Type, ns.Name, creationTime.Format(time.RFC3339), ns.Status.Phase)
+		logger.Log.Debug().Msgf("%s %s (createdAt: %s, phase: %s)", event.Type, ns.Name, creationTime.Format(time.RFC3339), ns.Status.Phase)
 
 		// sleep a bit
 		time.Sleep(5 * time.Second)
