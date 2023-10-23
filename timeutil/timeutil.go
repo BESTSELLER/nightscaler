@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/BESTSELLER/nightscaler/logger"
 )
 
 type Day struct {
@@ -83,7 +85,7 @@ func getWeekDays(weekDays string) ([]Day, error) {
 
 	}
 
-	fmt.Println(daysFound)
+	logger.Log.Debug().Msgf("Days found: %v", daysFound)
 
 	return daysFound, nil
 }
