@@ -59,6 +59,7 @@ func Listen() error {
 			logger.Log.Debug().Msgf("Duration: %d, Duration in time.Duration: %s", m.Duration, convertIntToTimeDuration)
 
 			k8s.ScaleUp(m.Namespace, convertIntToTimeDuration)
+			SendNamespaces()
 		}
 
 	})
