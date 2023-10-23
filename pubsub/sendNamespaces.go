@@ -3,6 +3,7 @@ package pubsub
 import (
 	"strconv"
 
+	"github.com/BESTSELLER/nightscaler/config"
 	"github.com/BESTSELLER/nightscaler/k8s"
 	"github.com/BESTSELLER/nightscaler/logger"
 	"github.com/BESTSELLER/nightscaler/timeutil"
@@ -15,7 +16,7 @@ func SendNamespaces() {
 	}
 
 	for _, ns := range namespaces {
-		s := "Mon-Fri 13:30-23:59 Europe/Copenhagen"
+		s := ns.Annotations[config.NAMESPACE_ANNOTATION]
 
 		startTime, endTime := timeutil.GetUptimes(s)
 
