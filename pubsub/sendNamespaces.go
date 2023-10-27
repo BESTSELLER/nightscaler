@@ -12,7 +12,7 @@ import (
 func SendNamespaces() {
 	namespaces, err := k8s.List()
 	if err != nil {
-		logger.Log.Fatal().Err(err).Msg("failed to list namespaces")
+		logger.Log.Error().Err(err).Msg("failed to list namespaces")
 	}
 
 	for _, ns := range namespaces {
@@ -22,7 +22,11 @@ func SendNamespaces() {
 			continue
 		}
 
-		startTime, endTime := timeutil.GetUptimes(s)
+		startTime, endTime, err := timeutil.GetUptimes(s)
+		if err != nil {
+			logger.Log.Error().Err(err).Msg("failed to parse uptime")
+			return
+		}
 
 		ns.Annotations["nightscaler/uptime-start"] = strconv.FormatInt(startTime.UnixMilli(), 10)
 		ns.Annotations["nightscaler/uptime-end"] = strconv.FormatInt(endTime.UnixMilli(), 10)
@@ -33,6 +37,7 @@ func SendNamespaces() {
 		Action: "create",
 	})
 	if err != nil {
-		logger.Log.Fatal().Err(err).Msg("failed to send Pub/Sub message")
+		logger.Log.Error().Err(err).Msg("failed to send Pub/Sub message")
+		return
 	}
 }
