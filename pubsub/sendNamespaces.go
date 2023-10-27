@@ -18,6 +18,10 @@ func SendNamespaces() {
 	for _, ns := range namespaces {
 		s := ns.Annotations[config.NAMESPACE_ANNOTATION]
 
+		if s == "" {
+			continue
+		}
+
 		startTime, endTime := timeutil.GetUptimes(s)
 
 		ns.Annotations["nightscaler/uptime-start"] = strconv.FormatInt(startTime.UnixMilli(), 10)
