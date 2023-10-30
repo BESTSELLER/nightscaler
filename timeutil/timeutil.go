@@ -24,36 +24,41 @@ var WeekDay = map[string]Day{
 	"Sun": {"Sunday", 6},
 }
 
-func GetUptimes(s string) (time.Time, time.Time) {
-	_, startTime, endTime := isUptimeNow(s)
+func GetUptimes(s string) (time.Time, time.Time, error) {
+	_, startTime, endTime, err := isUptimeNow(s)
 
-	return startTime, endTime
+	return startTime, endTime, err
 }
 
-func isUptimeNow(s string) (bool, time.Time, time.Time) {
+func isUptimeNow(s string) (bool, time.Time, time.Time, error) {
 	now := time.Now()
 
 	uptimeSplit := strings.Split(s, " ")
+
+	if len(uptimeSplit) != 3 {
+		return false, time.Time{}, time.Time{}, fmt.Errorf("'%s' is an invalid uptime format", s)
+	}
+
 	weekDays := uptimeSplit[0]
 	timeRange := uptimeSplit[1]
 	timeZone := uptimeSplit[2]
 
 	days, err := getWeekDays(weekDays)
 	if err != nil {
-		panic(err)
+		return false, time.Time{}, time.Time{}, err
 	}
 
 	isIt := isCurrentDay(days, now)
 	if !isIt {
-		return false, time.Time{}, time.Time{}
+		return false, time.Time{}, time.Time{}, nil
 	}
 
 	startTime, endTime, err := getTimeBoundary(timeRange, timeZone, now)
 	if err != nil {
-		panic(err)
+		return false, time.Time{}, time.Time{}, err
 	}
 
-	return now.After(startTime) && now.Before(endTime), startTime, endTime
+	return now.After(startTime) && now.Before(endTime), startTime, endTime, nil
 }
 
 func getWeekDays(weekDays string) ([]Day, error) {

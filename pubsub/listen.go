@@ -42,7 +42,8 @@ func Listen() error {
 		// Unmarshal message
 		var m PubSubMsg
 		if err := json.Unmarshal(msg.Data, &m); err != nil {
-			logger.Log.Fatal().Err(err).Msg("Failed to unmarshal message")
+			logger.Log.Error().Err(err).Msg("Failed to unmarshal message")
+			return
 		}
 
 		if m.Cluster != config.Config.ClusterName {
@@ -53,7 +54,8 @@ func Listen() error {
 			logger.Log.Info().Msgf("Scaling %s namespace %s up", m.Cluster, m.Namespace)
 			convertIntToTimeDuration, err := time.ParseDuration(fmt.Sprintf("%dh", m.Duration))
 			if err != nil {
-				logger.Log.Fatal().Err(err).Msg("Failed to parse duration")
+				logger.Log.Error().Err(err).Msg("Failed to parse duration")
+				return
 			}
 
 			logger.Log.Debug().Msgf("Duration: %d, Duration in time.Duration: %s", m.Duration, convertIntToTimeDuration)
