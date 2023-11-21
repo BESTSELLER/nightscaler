@@ -11,7 +11,7 @@ updates:
     groups:
       k8s:
         patterns:
-          - " k8s.io/*"
+          - "k8s.io/*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
