@@ -24,6 +24,7 @@ func Publish(msg []v1.Namespace, att Attributes) error {
 	if err != nil {
 		return fmt.Errorf("pubsub.NewClient error: %v", err)
 	}
+	defer client.Close()
 
 	pubsubPublisher := client.Topic(config.Config.PublishTopic)
 	topicExists, err := pubsubPublisher.Exists(ctx)
