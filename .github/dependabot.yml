@@ -8,6 +8,10 @@ updates:
       - "BESTSELLER/engineering-services"
     labels:
       - dependencies
+    groups:
+      k8s:
+        patterns:
+          - "k8s.io/*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
