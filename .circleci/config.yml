@@ -13,7 +13,7 @@ filter: &filter
 
 orbs:
   secret-injector: bestsellerit/secret-injector@2.6.0
-  cci-common: bestsellerit/cci-common@2.0.2
+  cci-common: bestsellerit/cci-common@2.1.0
 
 commands:
   generate_docker_tag:
