@@ -12,7 +12,7 @@ filter: &filter
       only: /.*/
 
 orbs:
-  secret-injector: bestsellerit/secret-injector@2.7.0
+  secret-injector: bestsellerit/secret-injector@2.8.0
   cci-common: bestsellerit/cci-common@2.2.1
 
 commands:
