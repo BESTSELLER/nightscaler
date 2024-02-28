@@ -33,7 +33,7 @@ commands:
 jobs:
   lint-test:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: "ubuntu-2204:2024.01.1"
     steps:
       - checkout
       - attach_workspace:
