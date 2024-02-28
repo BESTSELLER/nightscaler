@@ -33,7 +33,7 @@ commands:
 jobs:
   lint-test:
     machine:
-      image: "ubuntu-2204:2024.01.1"
+      image: ubuntu-2204:2022.07.1
     steps:
       - checkout
       - attach_workspace:
@@ -135,13 +135,11 @@ workflows:
           vault-oidc: true
           <<: [*prod_context, *filter]
       - cci-common/go_test_unit:
-          go_version: "1.21.3"
           resource_class: xlarge
           requires:
             - secret-injector/dump-secrets-yaml
           <<: [*prod_context, *filter]
       - cci-common/go_test_sonar:
-          go_version: "1.21.3"
           resource_class: large
           requires:
             - secret-injector/dump-secrets-yaml
