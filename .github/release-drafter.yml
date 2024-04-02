@@ -9,7 +9,7 @@ categories:
       - new-feature
   - title: Bug Fixes 🐛
     labels:
-      - patch
+      - bug-fix
   - title: Dependencies 📌
     labels:
       - dependencies
