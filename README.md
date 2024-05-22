@@ -1,7 +1,7 @@
 # Nightscaler
 
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/orkarstoft/nightscaler?sort=semver&style=flat-square)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/orkarstoft/nightscaler?style=flat-square)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/bestseller/nightscaler?sort=semver&style=flat-square)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/bestseller/nightscaler?style=flat-square)
 
 Nightscaler is an application designed to annotate Kubernetes namespaces based
 on Pub/Sub messages. It serves as an extension to kube-downscaler, providing
