@@ -10,7 +10,10 @@ pubsub:
   projectId: ""
   # Pub/Sub topic to subscribe to
   # REQUIRED
-  topic: ""
+  listen_topic: ""
+  # Pub/Sub topic to publish to
+  # REQUIRED
+  publish_topic: ""
   # Name of the cluster it is running in. Used to identify the cluster in the Pub/Sub message.
   # REQUIRED
   clustername: ""
@@ -20,23 +23,29 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.1.0"
 
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
   annotations:
-    iam.gke.io/gcp-service-account: kscale@ok2-pub-dev-f3ae.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: nightscaler@your-project-id.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   # name: ""
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+podEnvVars:
+  timezone: UTC
+  debug: false
+  jsonLogging: true
+
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL

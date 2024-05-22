@@ -1,6 +1,6 @@
-FROM golang:1.20-alpine AS builder
+FROM golang:1.22.2-alpine AS builder
 
-ARG UPX_VERSION=4.0.2-r0
+ARG UPX_VERSION=4.2.1-r0
 
 RUN apk update && apk add --no-cache ca-certificates upx=$UPX_VERSION tzdata && update-ca-certificates
 
@@ -16,12 +16,12 @@ RUN adduser \
   --shell "/sbin/nologin" \
   --no-create-home \
   --uid 64000 \
-  kscale
+  nightscaler
 
 COPY . .
-RUN go build -buildvcs=false -tags netgo -trimpath -tags netgo -ldflags="-w -s" -o ./kscale .
+RUN go build -buildvcs=false -tags netgo -trimpath -tags netgo -ldflags="-w -s" -o ./nightscaler .
 
-RUN upx --best --lzma kscale
+RUN upx --best --lzma nightscaler
 
 FROM scratch
 
@@ -29,8 +29,8 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=builder --chown=kscale:kscale /app/kscale /app/kscale
+COPY --from=builder --chown=nightscaler:nightscaler /app/nightscaler /app/nightscaler
 
-USER kscale:kscale
+USER nightscaler:nightscaler
 
-ENTRYPOINT ["/app/kscale"]
+ENTRYPOINT ["/app/nightscaler"]

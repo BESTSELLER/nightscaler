@@ -1,0 +1,168 @@
+version: 2.1
+
+prod_context: &prod_context
+  context:
+    - es02-prod
+    - shared
+filter: &filter
+  filters:
+    tags:
+      only: /^[v]?[0-9]+(\.[0-9]+)*(-.*)*$/
+    branches:
+      only: /.*/
+
+orbs:
+  secret-injector: bestsellerit/secret-injector@2.8.0
+  cci-common: bestsellerit/cci-common@3.3.1
+
+commands:
+  generate_docker_tag:
+    steps:
+      - run:
+          name: Generate Docker Tag
+          command: |
+            source /tmp/secrets || true
+            source ${BASH_ENV} || true
+
+            if [ -z "$CIRCLE_TAG" ]; then
+              echo "export DEPLOY_TAG=0.0.0-$(echo $CIRCLE_SHA1)" >> $BASH_ENV
+            else
+              echo "export DEPLOY_TAG=$(echo $CIRCLE_TAG)" >> $BASH_ENV
+            fi
+
+jobs:
+  lint-test:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - generate_docker_tag
+      - run:
+          name: Install Helm
+          command: |
+            curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+            sudo apt-get install apt-transport-https --yes
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+            sudo apt-get update
+            sudo apt-get install helm
+      - run:
+          name: Install Helm chart-testing
+          command: |
+            curl -L https://github.com/helm/chart-testing/releases/download/v3.9.0/chart-testing_3.9.0_linux_amd64.tar.gz > chart-testing.tar.gz
+      - run:
+          name: Unpack Helm chart-testing
+          command: |
+            mkdir chart-testing && \
+            sudo mkdir /etc/ct && \
+            tar -xvzf chart-testing.tar.gz -C chart-testing
+            sudo cp -R ./chart-testing/etc/*.yaml /etc/ct
+            sudo cp chart-testing/ct /usr/bin/ct
+            rm -rf ./chart-testing && rm chart-testing.tar.gz
+      - run:
+          name: Install dependencies for chart-testing
+          command: |
+            pip3 install yamale
+            pip3 install yamllint
+      - run:
+          name: Lint Helm Chart
+          command: |
+            changed=$(ct list-changed --config ct.yaml --target-branch master)
+            if [[ -n "$changed" ]]; then
+              echo "changed=true" >> $BASH_ENV
+            fi
+      - run:
+          name: Run chart-testing (lint)
+          command: |
+            source $BASH_ENV
+
+            ct lint --config ct.yaml --target-branch master
+      - run:
+          name: Install kind
+          command: |
+            source $BASH_ENV
+
+            curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-$(uname)-amd64
+            chmod +x ./kind
+            sudo mv ./kind /usr/bin/kind
+      - run:
+          name: Download kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            sudo mv ./kubectl /usr/local/bin/kubectl
+      - run:
+          name: Create kind cluster
+          command: |
+            kind create cluster --image kindest/node:v1.26.6 --name cluster-registry --wait 30s
+      - run:
+          name: Run chart-testing (install)
+          command: |
+            source $BASH_ENV
+
+            ct install --config ct.yaml --helm-extra-set-args "--set=image.tag=$DEPLOY_TAG" --target-branch master
+  publish_chart:
+    executor:
+      name: cci-common/ci_image
+      flavor: "-google"
+    parameters:
+      version:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - cci-common/install_gcloud
+      - cci-common/gcloud_login
+      - run:
+          name: "Package and push helm chart"
+          command: |
+            source /tmp/secrets || true
+
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/cluster_secret.json
+
+            gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://$K8S_CLUSTER_artifact_registry_url
+
+            helm package charts/nightscaler --app-version << parameters.version >> --version << parameters.version >>
+            helm push nightscaler-<< parameters.version >>.tgz oci://$K8S_CLUSTER_artifact_registry_url/$K8S_CLUSTER_artifact_registry_project/public-docker/chart
+
+workflows:
+  build-n-publish:
+    jobs:
+      - secret-injector/dump-secrets-yaml:
+          secret-file: secrets-ci.yaml
+          vault-oidc: true
+          <<: [*prod_context, *filter]
+      - cci-common/go_test_unit:
+          resource_class: xlarge
+          requires:
+            - secret-injector/dump-secrets-yaml
+          <<: [*prod_context, *filter]
+      - cci-common/go_test_sonar:
+          resource_class: large
+          requires:
+            - secret-injector/dump-secrets-yaml
+          <<: [*prod_context, *filter]
+      - cci-common/build_n_push_docker:
+          repo: public-docker
+          tag: $DEPLOY_TAG
+          resource_class: large
+          requires:
+            - secret-injector/dump-secrets-yaml
+          <<: [*prod_context, *filter]
+          pre-steps:
+            - generate_docker_tag
+      - lint-test:
+          <<: [*prod_context, *filter]
+          requires:
+            - cci-common/go_test_unit
+            - cci-common/go_test_sonar
+            - cci-common/build_n_push_docker
+      - publish_chart:
+          version: $DEPLOY_TAG
+          pre-steps:
+            - generate_docker_tag
+          <<: [*prod_context, *filter]
+          requires:
+            - lint-test

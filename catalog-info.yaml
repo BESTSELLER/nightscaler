@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nightscaler
+  description: Will help scale up your cluster/namespace if needed
+  annotations:
+    github.com/project-slug: BESTSELLER/nightscaler
+spec:
+  type: service
+  lifecycle: production
+  owner: engineering-services

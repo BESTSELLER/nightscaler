@@ -1,4 +1,4 @@
-# kscale
+# Nightscaler
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/orkarstoft/kscale?sort=semver&style=flat-square) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/orkarstoft/kscale?style=flat-square)
 
@@ -25,6 +25,17 @@ Kubernetes clusters often utilize kube-downscaler to scale down namespaces and c
 
 ### Installation
 To be added.
+
+## Running locally
+
+First you need to start the Pub/Sub emulator, to do so have a look at the [.hack](./.hack/README.md) folder.
+
+```shell
+export PUBSUB_PROJECT_ID=es-standalone-cb21
+export PUBSUB_EMULATOR_HOST=localhost:8085
+
+go run .
+```
 
 ### Usage
 1. Create an interface (e.g., a website) that allows users to trigger actions that require forced-uptime periods.
