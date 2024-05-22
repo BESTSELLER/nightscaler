@@ -4,7 +4,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/bestseller/nightscaler?style=flat-square)
 
 Nightscaler is an application designed to annotate Kubernetes namespaces based
-on Pub/Sub messages. It serves as an extension to kube-downscaler, providing
+on Pub/Sub messages. It serves as an extension to [kube-downscaler](https://codeberg.org/hjacobs/kube-downscaler), providing
 additional functionality for managing forced-uptime periods within namespaces.
 
 ## Overview
