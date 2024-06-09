@@ -1,6 +1,6 @@
 FROM golang:1.22.3-alpine AS builder
 
-RUN apk update && apk add --no-cache ca-certificates tzdata && update-ca-certificates
+RUN apk update && apk add --no-cache ca-certificates upx tzdata && update-ca-certificates
 
 WORKDIR /app
 
