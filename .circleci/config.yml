@@ -13,7 +13,7 @@ filter: &filter
 
 orbs:
   secret-injector: bestsellerit/secret-injector@2.8.0
-  cci-common: bestsellerit/cci-common@dev:ES-3310
+  cci-common: bestsellerit/cci-common@3.6.1
 
 commands:
   generate_docker_tag:
@@ -33,7 +33,7 @@ commands:
 jobs:
   lint-test:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2404:2024.08.1
     steps:
       - checkout
       - attach_workspace:
