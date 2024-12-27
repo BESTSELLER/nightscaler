@@ -1,8 +1,6 @@
 module github.com/BESTSELLER/nightscaler
 
-go 1.22.0
-
-toolchain go1.22.2
+go 1.23.4
 
 require (
 	cloud.google.com/go/pubsub v1.40.0
