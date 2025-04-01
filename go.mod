@@ -1,11 +1,12 @@
 module github.com/BESTSELLER/nightscaler
 
 go 1.23.4
+toolchain go1.24.1
 
 require (
 	cloud.google.com/go/pubsub v1.47.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	k8s.io/api v0.32.2
 	k8s.io/apimachinery v0.32.2
 	k8s.io/client-go v0.32.2
