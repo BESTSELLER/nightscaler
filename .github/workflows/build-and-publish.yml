@@ -1,0 +1,77 @@
+name: Build & Publish
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  test:
+    name: Go Test
+    uses: BESTSELLER/actions/.github/workflows/go_test.yaml@v1.18.0
+    secrets: inherit
+    with:
+      environment: prod
+
+  build-docker:
+    needs: test
+    name: Build and Push - Docker
+    uses: BESTSELLER/actions/.github/workflows/build_deploy.yaml@v1.18.0
+    secrets: inherit
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      docker_image_push: ${{ github.ref_name == 'master' }} # Only push when branch is master
+      app_version: 0.0.0-${{ github.sha }}
+      deploy: false # Never deploy to Kubernetes. This is done with FluxCD for this particular service
+      environment: prod
+      
+
+  publish-chart:
+    name: Publish Helm Chart
+    runs-on: ubuntu-24.04
+    environment: prod
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ startsWith(github.event_name, 'pull_request') && github.event.pull_request.head.sha || '' }}
+
+      - name: Get credentials
+        id: vault-auth
+        uses: hashicorp/vault-action@7709c609789c5e27b757a85817483caadbb5939a # v3.3.0
+        with:
+          method: jwt
+          url: ${{ vars.VAULT_ADDR }}
+          path: ${{ vars.VAULT_AUTH_PATH }}
+          role: ${{ vars.VAULT_ROLE }}
+          secrets: |
+            ES/data/gke/${{ vars.CLUSTER_CREDENTIALS_NAME }} client_email ;
+            SHARED/data/common artifact_registry_url | ARTIFACT_REGISTRY_URL ;
+            SHARED/data/common artifact_registry_project | ARTIFACT_REGISTRY_PROJECT ;
+
+      - id: set-variables
+        name: Set variables
+        run: |
+          # Version variables
+          echo "VERSION=${{ github.ref_type == 'tag' && github.ref_name || format('0.0.0-{0}', github.sha) }}" >> $GITHUB_ENV
+
+      - id: auth
+        name: Auth GCloud
+        uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193 # v2.1.10
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_POOL_PROVIDER_NAME }}
+          service_account: ${{ secrets.WORKLOAD_IDENTITY_SA_EMAIL }}
+
+      - id: package_and_push
+        name: Package and push Helm chart
+        run: |
+          gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://$ARTIFACT_REGISTRY_URL
+
+          # Deployment chart
+          helm dependency build charts/deployment
+          helm package charts/deployment --version $VERSION
+          helm push deployment-$VERSION.tgz oci://$ARTIFACT_REGISTRY_URL/$ARTIFACT_REGISTRY_PROJECT/public-docker/chart
+
