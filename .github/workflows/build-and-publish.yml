@@ -187,7 +187,7 @@ jobs:
           images: ${{ steps.prepare_image_tag.outputs.DOCKER_FRIENDLY_IMAGE_TAG }}
           tags: |
             type=raw,value=latest
-            type=raw,value=${{ inputs.app_version }},enable=true
+            type=raw,value=${{ github.event.release.tag_name }},enable=${{ github.event.release.tag_name && true || false }}
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{major}}
