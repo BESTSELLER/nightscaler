@@ -162,7 +162,7 @@ jobs:
             SHARED/data/common artifact_registry_project | ARTIFACT_REGISTRY_PROJECT ;
             SHARED/data/common DATADOG_API_KEY | DATADOG_API_KEY ;
             ${{ vars.VAULT_SHORT }}/data/CI/${{ vars.CLUSTER_CREDENTIALS_NAME }} * | K8S_CLUSTER_ ;
-            ${{ vars.VAULT_SHORT }}/data/$REPOSITORY_NAME/prod * ;
+            ${{ vars.VAULT_SHORT }}/data/${{ env.REPOSITORY_NAME }}/prod * ;
 
       - id: "auth"
         name: Auth GCloud
