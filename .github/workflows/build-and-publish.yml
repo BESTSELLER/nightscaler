@@ -143,7 +143,6 @@ jobs:
           echo "BRANCH_NAME_LOWER=${BRANCH_NAME,,}" >> $GITHUB_ENV
           echo "branch_name_lower=${BRANCH_NAME,,}" >> $GITHUB_OUTPUT
 
-          echo "CLUSTER_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
           echo "VAULT_SHORT=${{ vars.VAULT_SHORT }}" >> $GITHUB_ENV
           echo "VAULT_ADDR=${{ vars.VAULT_ADDR }}" >> $GITHUB_ENV
           echo "VAULT_ROLE=${{ vars.VAULT_ROLE }}" >> $GITHUB_ENV
@@ -163,7 +162,7 @@ jobs:
             SHARED/data/common artifact_registry_project | ARTIFACT_REGISTRY_PROJECT ;
             SHARED/data/common DATADOG_API_KEY | DATADOG_API_KEY ;
             ${{ vars.VAULT_SHORT }}/data/CI/${{ vars.CLUSTER_CREDENTIALS_NAME }} * | K8S_CLUSTER_ ;
-            ${{ vars.VAULT_SHORT }}/data/$REPOSITORY_NAME/$CLUSTER_ENV * ;
+            ${{ vars.VAULT_SHORT }}/data/$REPOSITORY_NAME/prod * ;
 
       - id: "auth"
         name: Auth GCloud
