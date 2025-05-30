@@ -186,7 +186,7 @@ jobs:
         with:
           images: ${{ steps.prepare_image_tag.outputs.DOCKER_FRIENDLY_IMAGE_TAG }}
           tags: |
-            type=raw,value=latest,enable=${{ inputs.docker_create_latest_tag }}
+            type=raw,value=latest
             type=raw,value=${{ inputs.app_version }},enable=true
             type=ref,event=branch
             type=ref,event=pr
