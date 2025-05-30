@@ -266,7 +266,7 @@ jobs:
           gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://$ARTIFACT_REGISTRY_URL
 
           # Deployment chart
-          helm dependency build charts/deployment
-          helm package charts/deployment --version $VERSION
+          helm dependency build charts/nightscaler
+          helm package charts/nightscaler --version $VERSION
           helm push deployment-$VERSION.tgz oci://$ARTIFACT_REGISTRY_URL/$ARTIFACT_REGISTRY_PROJECT/public-docker/chart
 
