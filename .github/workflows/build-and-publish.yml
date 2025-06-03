@@ -5,7 +5,7 @@ on:
     branches: ['*']
 
 jobs:
-  test:
+  go-test:
     name: Go Test
     runs-on: ubuntu-24.04
     environment: prod
@@ -120,8 +120,36 @@ jobs:
             -Dsonar.scm.provider=git
             ${{ startsWith(github.event_name, 'pull_request') && format('-Dsonar.pullrequest.branch={0} -Dsonar.pullrequest.key={1}', github.head_ref || github.ref_name, github.event.pull_request.number) || format('-Dsonar.branch.name={0}', github.head_ref || github.ref_name) }}
 
+  chart-lint:
+    name: Chart lint
+    runs-on: ubuntu-24.04
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.7.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config ct.yaml --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config ct.yaml --target-branch ${{ github.event.repository.default_branch }}
+
   build-docker:
-    needs: test
+    needs: go-test
     name: Build and Push - Docker
     runs-on: ubuntu-24.04
     environment: prod
@@ -223,7 +251,7 @@ jobs:
 
   publish-chart:
     name: Publish Helm Chart
-    needs: test
+    needs: chart-lint
     runs-on: ubuntu-24.04
     environment: prod
     permissions:
