@@ -272,5 +272,5 @@ jobs:
           # Deployment chart
           helm dependency build charts/nightscaler
           helm package charts/nightscaler --version $VERSION
-          helm push deployment-$VERSION.tgz oci://$ARTIFACT_REGISTRY_URL/$ARTIFACT_REGISTRY_PROJECT/public-docker/chart
+          helm push nightscaler-$VERSION.tgz oci://$ARTIFACT_REGISTRY_URL/$ARTIFACT_REGISTRY_PROJECT/public-docker/chart
 
