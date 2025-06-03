@@ -1,0 +1,66 @@
+name: Generate helm docs
+
+on:
+  pull_request:
+    types: [edited, opened, synchronize, reopened]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    env:
+      USE_HELM_TOOL_VERSION: v0.5.3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup git
+        run: |
+          git config --global --add safe.directory /github/workspace
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+
+      - name: Download helm-tools
+        run: go install github.com/cert-manager/helm-tool@${{ env.USE_HELM_TOOL_VERSION }}
+
+      - name: Run helm-docs on all charts
+        run: |
+          # Loop over every chart in the `charts/` folder and generate the docs.
+          for chartDir in charts/*; do
+            helm-tool inject -o $chartDir/README.md -t markdown-table -i $chartDir/values.yaml --header-search '^<!-- AUTO-GENERATED -->' --footer-search '^<!-- /AUTO-GENERATED -->'
+
+            # If any of the helm-tool commands failed, fail the action.
+            if [[ "$success" -ne 0 ]]; then
+              echo "Error: One or more helm-tool commands failed generating the documentation."
+              exit $success
+            fi
+
+            # Everything is OK, commit it!
+            git add "${chartDir}/README.md"
+
+          done
+
+      - name: Push docs to PR
+        run: |
+          if [[ "$(git status)" -eq 0 ]]; then
+            echo "::debug No files changed, skipping commit"
+            exit 0
+          fi
+
+          echo "::debug Following files will be committed"
+          git status -s
+
+          git add charts/**/README.md
+          if [ "$(git status --porcelain | grep "charts/.*/README.md" | grep -c -E '([MA]\W).+')" -gt 0 ]; then
+            echo "::debug Added chart documentation to git staging area"
+          else
+            echo "::debug No change in charts/nightscaler/README.md detected"
+            exit 0
+          fi
+
+          git commit -m "Updated helm docs"
+          git push
