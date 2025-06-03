@@ -8,7 +8,6 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     env:
-      USE_GO_VERSION: 1.23.4
       USE_HELM_TOOL_VERSION: v0.5.3
     steps:
       - uses: actions/checkout@v3
@@ -22,10 +21,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup Go ${{ env.USE_GO_VERSION }}
+      - name: Setup Go
         uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.USE_GO_VERSION }}
 
       - name: Download helm-tools
         run: go install github.com/cert-manager/helm-tool@${{ env.USE_HELM_TOOL_VERSION }}
