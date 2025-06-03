@@ -4,8 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "BESTSELLER/engineering-services"
     labels:
       - dependencies
     groups:
@@ -16,15 +14,11 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "BESTSELLER/engineering-services"
     labels:
       - dependencies
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "BESTSELLER/engineering-services"
     labels:
       - dependencies
