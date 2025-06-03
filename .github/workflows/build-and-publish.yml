@@ -1,8 +1,8 @@
 name: Build & Publish
 
 on:
-  push:
-    branches: ['*']
+  pull_request:
+    branches: ['master']
 
 jobs:
   go-test:
