@@ -37,8 +37,8 @@ jobs:
 
       - name: Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
-        # with:
-        #   go-version-file: "${{ inputs.working_directory }}/go.mod"
+        with:
+          go-version-file: "${{ inputs.working_directory }}/go.mod"
 
       - name: Install linters
         run: go install golang.org/x/lint/golint@latest
