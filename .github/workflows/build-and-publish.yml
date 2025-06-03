@@ -236,17 +236,6 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.tags }} # TODO does this work still?
           labels: ${{ steps.meta.outputs.labels }}
-          # file: ${{ inputs.docker_file_path }}
-          # context: ${{ inputs.docker_context }}
-          # build-contexts: ${{ inputs.docker_build_contexts }}
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
-          # target: ${{ inputs.docker_target }}
-          # secrets: ${{ inputs.docker_secrets }}
-          # secret-envs: ${{ inputs.docker_secret_envs }}
-          # build-args: ${{ inputs.docker_build_args }}
-          # secret-files: |
-          #   "gcloud=${{ steps.auth.outputs.credentials_file_path }}"
 
       - name: push images
         run: docker push --all-tags ${{ steps.prepare_image_tag.outputs.DOCKER_FRIENDLY_IMAGE_TAG }}
