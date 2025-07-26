@@ -38,14 +38,13 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
-          go-version-file: "${{ inputs.working_directory }}/go.mod"
+          go-version-file: "go.mod"
 
       - name: Install linters
         run: go install golang.org/x/lint/golint@latest
 
       - name: Go fmt and lint
         id: go_static_analysis
-        working-directory: ${{ inputs.working_directory }}
         run: |
           go fmt ./...
           golint ./...
@@ -60,8 +59,6 @@ jobs:
       - name: Test
         if: always()
         uses: robherley/go-test-action@b19f6aadabfb1ad85079065b21aa2af132466468 # v0.6.0
-        with:
-          moduleDirectory: ${{ inputs.working_directory }}
 
       - name: Cache SonarQube packages
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 #v4.2.3
@@ -292,4 +289,3 @@ jobs:
           helm dependency build charts/nightscaler
           helm package charts/nightscaler --version $VERSION
           helm push nightscaler-$VERSION.tgz oci://$ARTIFACT_REGISTRY_URL/$ARTIFACT_REGISTRY_PROJECT/public-docker/chart
-
