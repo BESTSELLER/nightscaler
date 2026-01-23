@@ -1,12 +1,11 @@
 name: Build & Publish
 
 on:
-  pull_request_target:
+  pull_request:
     branches: ['master']
 
 jobs:
   go-test:
-    if: github.event.pull_request.head.repo.full_name == github.repository # Prevent forks
     name: Go Test
     runs-on: ubuntu-24.04
     environment: prod
@@ -119,7 +118,6 @@ jobs:
             ${{ startsWith(github.event_name, 'pull_request') && format('-Dsonar.pullrequest.branch={0} -Dsonar.pullrequest.key={1}', github.head_ref || github.ref_name, github.event.pull_request.number) || format('-Dsonar.branch.name={0}', github.head_ref || github.ref_name) }}
 
   chart-lint:
-    if: github.event.pull_request.head.repo.full_name == github.repository # Prevent forks
     name: Chart lint
     runs-on: ubuntu-24.04
     environment: prod
@@ -195,8 +193,8 @@ jobs:
         name: Auth GCloud
         uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193 # v2.1.10
         with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_POOL_PROVIDER_NAME }}
-          service_account: ${{ secrets.WORKLOAD_IDENTITY_SA_EMAIL }}
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_POOL_PROVIDER_NAME }}
+          service_account: ${{ vars.WORKLOAD_IDENTITY_SA_EMAIL }}
 
       - name: "Configure docker"
         run: "gcloud auth configure-docker ${{ steps.cluster_creds.outputs.ARTIFACT_REGISTRY_URL }}"
@@ -277,8 +275,8 @@ jobs:
         name: Auth GCloud
         uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193 # v2.1.10
         with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_POOL_PROVIDER_NAME }}
-          service_account: ${{ secrets.WORKLOAD_IDENTITY_SA_EMAIL }}
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_POOL_PROVIDER_NAME }}
+          service_account: ${{ vars.WORKLOAD_IDENTITY_SA_EMAIL }}
 
       - id: package_and_push
         name: Package and push Helm chart
