@@ -6,7 +6,6 @@ on:
 
 jobs:
   go-test:
-    if: github.event.pull_request.head.repo.full_name == github.repository # Prevent forks
     name: Go Test
     runs-on: ubuntu-24.04
     environment: prod
@@ -119,7 +118,6 @@ jobs:
             ${{ startsWith(github.event_name, 'pull_request') && format('-Dsonar.pullrequest.branch={0} -Dsonar.pullrequest.key={1}', github.head_ref || github.ref_name, github.event.pull_request.number) || format('-Dsonar.branch.name={0}', github.head_ref || github.ref_name) }}
 
   chart-lint:
-    if: github.event.pull_request.head.repo.full_name == github.repository # Prevent forks
     name: Chart lint
     runs-on: ubuntu-24.04
     environment: prod
