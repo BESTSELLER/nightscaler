@@ -105,7 +105,7 @@ jobs:
           fi
 
       - name: SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@2500896589ef8f7247069a56136f8dc177c27ccf # v5.2.0
+        uses: SonarSource/sonarqube-scan-action@59db25f34e16620e48ab4bb9e4a5dce155cb5432 # v8.0.0
         with:
           args: >
             -Dsonar.host.url=${{ steps.vault_secrets.outputs.SONAR_HOST }}
