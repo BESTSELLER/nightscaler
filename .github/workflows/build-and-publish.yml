@@ -21,7 +21,7 @@ jobs:
 
       - name: Get vault secrets
         id: vault_secrets
-        uses: hashicorp/vault-action@7709c609789c5e27b757a85817483caadbb5939a # v3.3.0
+        uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
         with:
           method: jwt
           url: ${{ vars.VAULT_ADDR }}
@@ -113,7 +113,7 @@ jobs:
 
       - name: Get cluster credentials
         id: cluster_creds
-        uses: hashicorp/vault-action@7709c609789c5e27b757a85817483caadbb5939a # v3.3.0
+        uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
         with:
           method: jwt
           url: ${{ vars.VAULT_ADDR }}
@@ -192,7 +192,7 @@ jobs:
 
       - name: Get credentials
         id: vault-auth
-        uses: hashicorp/vault-action@7709c609789c5e27b757a85817483caadbb5939a # v3.3.0
+        uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
         with:
           method: jwt
           url: ${{ vars.VAULT_ADDR }}
