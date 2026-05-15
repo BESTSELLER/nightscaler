@@ -22,7 +22,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
 
       - name: Download helm-tools
         run: go install github.com/cert-manager/helm-tool@${{ env.USE_HELM_TOOL_VERSION }}
